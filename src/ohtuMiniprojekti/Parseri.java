@@ -34,7 +34,7 @@ public class Parseri {
     public String muutaBibTexMuotoon(String type, String author,
             String title, String year, String publisher) {
 
-        bibTexTulos = bibTexTulos.concat("\n@" + type + "{");
+        bibTexTulos = bibTexTulos.concat("@" + type + "{");
         //joku id vissiin vielä tähän väliin?
         bibTexTulos = bibTexTulos.concat(jokuId + ", \n");
         bibTexTulos = bibTexTulos.concat("author = {" + author + "}, \n");
