@@ -45,8 +45,8 @@ public class ViitekaluServlet extends HttpServlet
 	out.println("<h1>ViitekaluServlet at " + request.getContextPath() + "</h1>");
 
 	out.println("<nav>");
-	out.println("<a href=\"?action=add\">Lisää lähde</a> | ");
-	out.println("<a href=\"?action=list\">Listaa lähteet</a> | ");
+	out.println("<a href=\"?action=add\">Lis&auml;&auml; l&auml;hde</a> | ");
+	out.println("<a href=\"?action=list\">Listaa l&auml;hteet</a> | ");
 	out.println("<a href=\"?action=bibtex\">Lataa BIBTEX</a>");
 	out.println("</nav>");
     }
@@ -90,18 +90,11 @@ public class ViitekaluServlet extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response, boolean isPost)
 	    throws ServletException, IOException
     {
+
 	ServletContext cntxt = getServletContext();
 
-	// Storage
-	/*try
-	 {
-	 kirjat = (List) cntxt.getAttribute("kirjat");
-	 }
-	 catch (Exception e)
-	 {
-	 //
-	 }
-	 */
+	request.setCharacterEncoding("UTF-8");
+	response.setCharacterEncoding("UTF-8");
 
 	PrintWriter out = response.getWriter();
 	try
@@ -132,13 +125,13 @@ public class ViitekaluServlet extends HttpServlet
 	    {
 		header(request, response, out);
 
-		out.println("<br />Lähdelistaus<br /><br />");
+		out.println("<br />L&auml;hdelistaus<br /><br />");
 		Iterator<HashMap> it = kirjat.iterator();
 		int i = 1;
 		while (it.hasNext())
 		{
 		    HashMap kirja = it.next();
-		    out.println("Lähde " + i + ":<br />");
+		    out.println("L&auml;hde " + i + ":<br />");
 		    Iterator hit = kirja.entrySet().iterator();
 		    while (hit.hasNext())
 		    {
@@ -175,12 +168,12 @@ public class ViitekaluServlet extends HttpServlet
 		    kirjat.add(kirja);
 		}
 
-		// Lisäyslomake
+		// Lis&auml;yslomake
 		out.println("<br /><br /><form method=\"post\" action=\"?action=add\">"
 			+ "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
 			+ "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
 			+ "Vuosi:<br /><input type=\"text\" name=\"year\" /><br />"
-			+ "<input type=\"submit\" value=\"Lisää\" /><br />"
+			+ "<input type=\"submit\" value=\"Lis&auml;&auml;\" /><br />"
 			+ "</form><br /><br />");
 
 		try
