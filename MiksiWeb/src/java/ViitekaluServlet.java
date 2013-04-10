@@ -5,6 +5,12 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +23,59 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ViitekaluServlet extends HttpServlet
 {
+    // Kirjat
+    List<HashMap> kirjat = new ArrayList();
+
+    /**
+     * Print default header
+     *
+     * @param request
+     * @param response
+     * @param out
+     */
+    protected void header(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
+    {
+	response.setContentType("text/html;charset=UTF-8");
+	out.println("<!DOCTYPE html>");
+	out.println("<html>");
+	out.println("<head>");
+	out.println("<title>ViitekaluServlet</title>");
+	out.println("</head>");
+	out.println("<body>");
+	out.println("<h1>ViitekaluServlet at " + request.getContextPath() + "</h1>");
+
+	out.println("<nav>");
+	out.println("<a href=\"?action=add\">Lisää lähde</a> | ");
+	out.println("<a href=\"?action=list\">Listaa lähteet</a> | ");
+	out.println("<a href=\"?action=bibtex\">Lataa BIBTEX</a>");
+	out.println("</nav>");
+    }
+
+    /**
+     * Print footer
+     *
+     * @param out
+     * @param cntxt
+     */
+    protected void footer(PrintWriter out, ServletContext cntxt)
+    {
+	int latauksia = 0;
+	try
+	{
+	    latauksia = (Integer) cntxt.getAttribute("hitcount");
+	}
+	catch (Exception e)
+	{
+	    //
+	}
+	out.println("Latauksia " + latauksia + ", Kirjoja " + kirjat.size() + "<br />");
+	cntxt.setAttribute("hitcount", latauksia + 1);
+
+	out.println("</body>");
+	out.println("</html>");
+
+    }
+
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -24,72 +83,130 @@ public class ViitekaluServlet extends HttpServlet
      *
      * @param request servlet request
      * @param response servlet response
+     * @param isPost boolean is request post request
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response, boolean isPost)
 	    throws ServletException, IOException
     {
-	response.setContentType("text/html;charset=UTF-8");
+	ServletContext cntxt = getServletContext();
+
+	// Storage
+	/*try
+	 {
+	 kirjat = (List) cntxt.getAttribute("kirjat");
+	 }
+	 catch (Exception e)
+	 {
+	 //
+	 }
+	 */
+
 	PrintWriter out = response.getWriter();
 	try
 	{
-	    /* TODO output your page here. You may use following sample code. */
-	    out.println("<!DOCTYPE html>");
-	    out.println("<html>");
-	    out.println("<head>");
-	    out.println("<title>Servlet ViitekaluServlet</title>");	    
-	    out.println("</head>");
-	    out.println("<body>");
-	    out.println("<h1>Servlet ViitekaluServlet at " + request.getContextPath() + "</h1>");
-	 
+
+	    // Handle action parameter
+	    String action;
 	    try
 	    {
-		String action = request.getParameter("action");
-		if (action.equals("42"))
-	        {
-		    out.println("Hidden bonus feature print list");
-	        }
-	    }
-	    catch (Exception e)
-	    {
-		//
-	    }
-	    
-	    try
-	    {
-		String arvo = request.getParameter("arvo");
-		if (!arvo.isEmpty())
+		action = request.getParameter("action");
+		if (action == null)
 		{
-		    out.println("Arvo oli: "+arvo+"<br />");
+		    action = "";
 		}
 	    }
 	    catch (Exception e)
 	    {
-		//
+		action = "";
 	    }
-	
-	    out.println("<form method=\"post\" action=\"?\"><input type=\"text\" name=\"arvo\" /><input type=\"submit\" value=\"Lisää\" /></form>");
-	    
-	    ServletContext cntxt = getServletContext();
-	    int latauksia = 0;
-	    try
+
+	    // BIBTEX-export
+	    if (action.equals("bibtex"))
 	    {
-		latauksia = (Integer) cntxt.getAttribute("hitcount");
+		response.setContentType("application/x-bibtex;charset=UTF-8");
+		out.println("BIBTEX");
 	    }
-	    catch (Exception e)
+	    else if (action.equals("list"))
 	    {
-		//
+		header(request, response, out);
+
+		out.println("<br />Lähdelistaus<br /><br />");
+		Iterator<HashMap> it = kirjat.iterator();
+		int i = 1;
+		while (it.hasNext())
+		{
+		    HashMap kirja = it.next();
+		    out.println("Lähde " + i + ":<br />");
+		    Iterator hit = kirja.entrySet().iterator();
+		    while (hit.hasNext())
+		    {
+			Map.Entry pairs = (Map.Entry) hit.next();
+			out.println(pairs.getKey() + " == " + pairs.getValue() + "<br />");
+		    }
+		    //Do something with obj
+		    i++;
+		}
+		out.println("<br /><br />");
+
+		footer(out, cntxt);
 	    }
-	    out.println("Latauksia "+latauksia+"<br />");
-	    cntxt.setAttribute("hitcount", latauksia+1);
-	    
-	    out.println("<a href=\"?action=42\">42?</a><br />");
-	    out.println("</body>");
-	    out.println("</html>");
+	    else if (action.equals("add"))
+	    {
+		header(request, response, out);
+
+		// Post?
+		if (isPost)
+		{
+		    HashMap<String, String> kirja = new HashMap();
+		    Enumeration paramNames = request.getParameterNames();
+		    while (paramNames.hasMoreElements())
+		    {
+			String paramName = (String) paramNames.nextElement();
+			if (paramName.equals("action"))
+			{
+			    continue;
+			}
+			String paramValue = (String) request.getParameter(paramName);
+			kirja.put(paramName, paramValue);
+			//out.print(paramName+"=="+paramValue);
+		    }
+		    kirjat.add(kirja);
+		}
+
+		// Lisäyslomake
+		out.println("<br /><br /><form method=\"post\" action=\"?action=add\">"
+			+ "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
+			+ "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
+			+ "Vuosi:<br /><input type=\"text\" name=\"year\" /><br />"
+			+ "<input type=\"submit\" value=\"Lisää\" /><br />"
+			+ "</form><br /><br />");
+
+		try
+		{
+		    String arvo = request.getParameter("arvo");
+		    if (!arvo.isEmpty())
+		    {
+			out.println("Arvo oli: " + arvo + "<br />");
+		    }
+		}
+		catch (Exception e)
+		{
+		    //
+		}
+
+		footer(out, cntxt);
+	    }
+	    else
+	    {
+		header(request, response, out);
+		out.println("<h1>Tervetuloa!</h1>");
+		footer(out, cntxt);
+	    }
 	}
 	finally
-	{	    
+	{
 	    out.close();
 	}
     }
@@ -108,7 +225,7 @@ public class ViitekaluServlet extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException
     {
-	processRequest(request, response);
+	processRequest(request, response, false);
     }
 
     /**
@@ -124,7 +241,7 @@ public class ViitekaluServlet extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException
     {
-	processRequest(request, response);
+	processRequest(request, response, true);
     }
 
     /**
