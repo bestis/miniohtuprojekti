@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import bibTexKoodit.Parseri;
 
 /**
  *
@@ -25,6 +26,7 @@ public class ViitekaluServlet extends HttpServlet
 {
     // Kirjat
     List<HashMap> kirjat = new ArrayList();
+    
 
     /**
      * Print default header
@@ -118,8 +120,14 @@ public class ViitekaluServlet extends HttpServlet
 	    // BIBTEX-export
 	    if (action.equals("bibtex"))
 	    {
+                Parseri parseri = new Parseri(kirjat);
 		response.setContentType("application/x-bibtex;charset=UTF-8");
-		out.println("BIBTEX");
+                response.setHeader("Content-Disposition","attachment;filename=viittet.bib");
+		
+               
+                out.println(parseri.getBibTex());
+                
+                
 	    }
 	    else if (action.equals("list"))
 	    {

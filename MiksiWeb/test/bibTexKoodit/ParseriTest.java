@@ -4,6 +4,9 @@
  */
 package bibTexKoodit;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -44,8 +47,19 @@ public class ParseriTest {
      String tulos;
      
      Parseri parser = new Parseri();
-     tulos = parser.muutaBibTexMuotoon(type, author, title, year, publisher);
-     System.out.println(tulos);
+     tulos = parser.muutaBibTexMuotoon(type, author, title, year /*, publisher*/);
+     //System.out.println(tulos);
          
+     }
+     @Test
+     public void lueHashmapistaArvoja(){
+         List<HashMap> kirjat = new ArrayList();
+         HashMap<String, String> kirja = new HashMap();
+         kirja.put("author", "vihavainen");
+         kirja.put("title", "clean code");
+         kirja.put("year", "2008");
+         kirjat.add(kirja);
+         Parseri parser = new Parseri(kirjat);
+         System.out.println(parser.getBibTex());
      }
 }
