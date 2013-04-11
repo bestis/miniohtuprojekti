@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
  * @author Ronnie
  */
 public class ParseriTest {
-    
+
     public ParseriTest() {
     }
 
@@ -26,31 +26,43 @@ public class ParseriTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:
     //
-     @Test
-     public void syotetytParametritBibTexmuotoon() {
-     String type = "book";
-     String author = "Vihavainen";
-     String title = "Clean code";
-     String year = "2008";
-     String publisher = "jokuvaan";
-     String tulos;
-     
-     Parseri parser = new Parseri();
-     tulos = parser.muutaBibTexMuotoon(type, author, title, year /*, publisher*/);
-     //System.out.println(tulos);
-         
-     }
+
+    @Test
+    public void syotetytParametritBibTexmuotoon() {
+        String type = "book";
+        String id = "BA04";
+        String author = "Vihavainen";
+        String title = "Clean code";
+        String year = "2008";
+        String publisher = "jokuvaan";
+        String tulos;
+
+        Parseri parser = new Parseri();
+        tulos = parser.muutaBibTexMuotoon(type, author, title, year /*, publisher*/);
+
+        String odotettuTulos = "";
+        odotettuTulos = odotettuTulos.concat("@" + type + "{");
+        odotettuTulos = odotettuTulos.concat(id + ", \n");
+        odotettuTulos = odotettuTulos.concat("author = {" + author + "}, \n");
+        odotettuTulos = odotettuTulos.concat("title = {" + title + "}, \n");
+        odotettuTulos = odotettuTulos.concat("year = {" + year + "}, \n");
+        // odotettuTulos = odotettuTulos.concat("julkaisija = {" + publisher + "}, \n");
+        odotettuTulos = odotettuTulos.concat("} \n");
+
+        assertEquals(odotettuTulos, tulos);
+
+    }
      @Test
      public void lueHashmapistaArvoja(){
          List<HashMap> kirjat = new ArrayList();

@@ -26,22 +26,22 @@ public class Parseri {
 
     public Parseri() {
     }
-/*
-    public static void tiedostoTallennus(String tiedostonimi) {
-        if (onMuutettu == true) {
-            try {
-                PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(tiedostonimi, true)));
-                out.println(bibTexTulos);
-                out.close();
-            } catch (IOException e) {
-            }
-        } else {
-            System.out.println("Kutsu ensin metodia muutaBibTexMuotoon!");
-        }
+    /*
+     public static void tiedostoTallennus(String tiedostonimi) {
+     if (onMuutettu == true) {
+     try {
+     PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(tiedostonimi, true)));
+     out.println(bibTexTulos);
+     out.close();
+     } catch (IOException e) {
+     }
+     } else {
+     System.out.println("Kutsu ensin metodia muutaBibTexMuotoon!");
+     }
 
-    }
-    * 
-    */
+     }
+     * 
+     */
 
     public static String muutaBibTexMuotoon(String type, String author,
             String title, String year/*
@@ -63,8 +63,8 @@ public class Parseri {
 
     public String getBibTex() {
         HashMap<String, String> kirja;
-        
-       for (int i = 0; i < kirjat.size(); i++) {
+
+        for (int i = 0; i < kirjat.size(); i++) {
             kirja = kirjat.get(i);
 
             String author = kirja.get("author");
@@ -73,7 +73,7 @@ public class Parseri {
             muutaBibTexMuotoon("book", author, title, year);
 
         }
- 
+
 
         return bibTexTulos;
     }
