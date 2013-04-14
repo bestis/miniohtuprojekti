@@ -22,11 +22,10 @@ import bibTexKoodit.Parseri;
  *
  * @author bestis
  */
-public class ViitekaluServlet extends HttpServlet
-{
+public class ViitekaluServlet extends HttpServlet {
     // Kirjat
+
     List<HashMap> kirjat = new ArrayList();
-    
 
     /**
      * Print default header
@@ -35,22 +34,21 @@ public class ViitekaluServlet extends HttpServlet
      * @param response
      * @param out
      */
-    protected void header(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
-    {
-	response.setContentType("text/html;charset=UTF-8");
-	out.println("<!DOCTYPE html>");
-	out.println("<html>");
-	out.println("<head>");
-	out.println("<title>ViitekaluServlet</title>");
-	out.println("</head>");
-	out.println("<body>");
-	out.println("<h1>ViitekaluServlet at " + request.getContextPath() + "</h1>");
+    protected void header(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
+        response.setContentType("text/html;charset=UTF-8");
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>ViitekaluServlet</title>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<h1>ViitekaluServlet at " + request.getContextPath() + "</h1>");
 
-	out.println("<nav>");
-	out.println("<a href=\"?action=add\">Lis&auml;&auml; l&auml;hde</a> | ");
-	out.println("<a href=\"?action=list\">Listaa l&auml;hteet</a> | ");
-	out.println("<a href=\"?action=bibtex\">Lataa BIBTEX</a>");
-	out.println("</nav>");
+        out.println("<nav>");
+        out.println("<a href=\"?action=add\">Lis&auml;&auml; l&auml;hde</a> | ");
+        out.println("<a href=\"?action=list\">Listaa l&auml;hteet</a> | ");
+        out.println("<a href=\"?action=bibtex\">Lataa BIBTEX</a>");
+        out.println("</nav>");
     }
 
     /**
@@ -59,22 +57,18 @@ public class ViitekaluServlet extends HttpServlet
      * @param out
      * @param cntxt
      */
-    protected void footer(PrintWriter out, ServletContext cntxt)
-    {
-	int latauksia = 0;
-	try
-	{
-	    latauksia = (Integer) cntxt.getAttribute("hitcount");
-	}
-	catch (Exception e)
-	{
-	    //
-	}
-	out.println("Latauksia " + latauksia + ", Kirjoja " + kirjat.size() + "<br />");
-	cntxt.setAttribute("hitcount", latauksia + 1);
+    protected void footer(PrintWriter out, ServletContext cntxt) {
+        int latauksia = 0;
+        try {
+            latauksia = (Integer) cntxt.getAttribute("hitcount");
+        } catch (Exception e) {
+            //
+        }
+        out.println("Latauksia " + latauksia + ", Kirjoja " + kirjat.size() + "<br />");
+        cntxt.setAttribute("hitcount", latauksia + 1);
 
-	out.println("</body>");
-	out.println("</html>");
+        out.println("</body>");
+        out.println("</html>");
 
     }
 
@@ -90,126 +84,149 @@ public class ViitekaluServlet extends HttpServlet
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response, boolean isPost)
-	    throws ServletException, IOException
-    {
+            throws ServletException, IOException {
 
-	ServletContext cntxt = getServletContext();
+        ServletContext cntxt = getServletContext();
 
-	request.setCharacterEncoding("UTF-8");
-	response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
 
-	PrintWriter out = response.getWriter();
-	try
-	{
+        PrintWriter out = response.getWriter();
+        try {
 
-	    // Handle action parameter
-	    String action;
-	    try
-	    {
-		action = request.getParameter("action");
-		if (action == null)
-		{
-		    action = "";
-		}
-	    }
-	    catch (Exception e)
-	    {
-		action = "";
-	    }
+            // Handle action parameter
+            String action;
+            try {
+                action = request.getParameter("action");
+                if (action == null) {
+                    action = "";
+                }
+            } catch (Exception e) {
+                action = "";
+            }
 
-	    // BIBTEX-export
-	    if (action.equals("bibtex"))
-	    {
+            // BIBTEX-export
+            if (action.equals("bibtex")) {
                 Parseri parseri = new Parseri(kirjat);
-		response.setContentType("application/x-bibtex;charset=UTF-8");
-                response.setHeader("Content-Disposition","attachment;filename=viittet.bib");
-		
-               
+                response.setContentType("application/x-bibtex;charset=UTF-8");
+                response.setHeader("Content-Disposition", "attachment;filename=viittet.bib");
+
+
                 out.println(parseri.getBibTex());
+
+
+            } else if (action.equals("list")) {
+                header(request, response, out);
+
+                out.println("<br />L&auml;hdelistaus<br /><br />");
+                Iterator<HashMap> it = kirjat.iterator();
+                int i = 1;
+                while (it.hasNext()) {
+                    HashMap kirja = it.next();
+                    out.println("L&auml;hde " + i + ":<br />");
+                    Iterator hit = kirja.entrySet().iterator();
+                    while (hit.hasNext()) {
+                        Map.Entry pairs = (Map.Entry) hit.next();
+                        out.println(pairs.getKey() + " == " + pairs.getValue() + "<br />");
+                    }
+                    //Do something with obj
+                    i++;
+                }
+                out.println("<br /><br />");
+
+                footer(out, cntxt);
+            } else if (action.equals("add")) {
+                header(request, response, out);
+
+                // Post?
+                if (isPost) {
+                    HashMap<String, String> kirja = new HashMap();
+                    Enumeration paramNames = request.getParameterNames();
+                    while (paramNames.hasMoreElements()) {
+                        String paramName = (String) paramNames.nextElement();
+                        if (paramName.equals("action")) {
+                            continue;
+                        }
+                        String paramValue = (String) request.getParameter(paramName);
+                        kirja.put(paramName, paramValue);
+                        //out.print(paramName+"=="+paramValue);
+                    }
+                    kirjat.add(kirja);
+                }
+
+                // Lis&auml;yslomake
+               
+                out.println("<script type=\"text/javascript\">function naytaKirja(id){ document.getElementById(id).style.display='block';"
+                        + "document.getElementById('artikkeli').style.display='none';"
+                        + "document.getElementById('inproceedings').style.display='none';}</script>");
+                out.println("<script type=\"text/javascript\">function naytaArtikkeli(id){ document.getElementById(id).style.display='block';"
+                        + "document.getElementById('kirja').style.display='none';"
+                        + "document.getElementById('inproceedings').style.display='none';}</script>");
+                out.println("<script type=\"text/javascript\">function naytaInproceedings(id) {document.getElementById(id).style.display='block';"
+                        + "document.getElementById('artikkeli').style.display='none';"
+                        + "document.getElementById('kirja').style.display='none';}</script>");
                 
+                out.println("Book:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaKirja('kirja');\"> ");
+                out.println("Article:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaArtikkeli('artikkeli');\" > ");
+                out.println("Inproceedings:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaInproceedings('inproceedings');\"  >");
                 
-	    }
-	    else if (action.equals("list"))
-	    {
-		header(request, response, out);
+                   
+                out.println("<div class=\"kirjalomake\" id=\"kirja\" style=\"display:none\">"
+                        + "<br /><br /><form method=\"post\" action=\"?action=add\">"
+                        + "Julkaisija:<br /><input type=\"text\" name=\"publisher\" /><br />"
+                        + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
+                        + "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
+                        + "Vuosi:<br /><input type=\"text\" name=\"year\" /><br />"
+                        + "<input type=\"submit\" value=\"Lis&auml;&auml;\" /><br />"
+                        + "</form><br /><br /></div>");
+                
+                out.println("<div class=\"artikkelilomake\" id=\"artikkeli\" style=\"display:none\">"
+                        + "<br /><br /><form method=\"post\" action=\"?action=add\">"
+                        + "Journal:<br /><input type=\"text\" name=\"journal\" /><br />"
+                        + "Volume:<br /><input type=\"text\" name=\"volume\" /><br />"
+                        + "Number:<br /><input type=\"text\" name=\"number\" /><br />"
+                        + "Month:<br /><input type=\"text\" name=\"month\" /><br />"
+                        + "Year:<br /><input type=\"text\" name=\"year\" /><br />"
+                        + "Pages:<br /><input type=\"text\" name=\"pages\" /><br />"
+                        + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
+                        + "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
+                        + "Julkaisija:<br /><input type=\"text\" name=\"publisher\" /><br />"
+                        + "Osoite:<br /><input type=\"text\" name=\"address\" /><br />"
+                        + "<input type=\"submit\" value=\"Lis&auml;&auml;\" /><br />"
+                        + "</form><br /><br /></div>");
+                
+                out.println("<div class=\"inproceedingslomake\" id=\"inproceedings\" style=\"display:none\">"
+                        + "<br /><br /><form method=\"post\" action=\"?action=add\">"
+                        + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
+                        + "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
+                        + "Booktitle:<br /><input type=\"text\" name=\"booktitle\" /><br />"
+                        + "Vuosi:<br /><input type=\"text\" name=\"year\" /><br />"
+                        + "Julkaisija:<br /><input type=\"text\" name=\"publisher\" /><br />"
+                        + "<input type=\"submit\" value=\"Lis&auml;&auml;\" /><br />"
+                        + "</form><br /><br /></div>");
 
-		out.println("<br />L&auml;hdelistaus<br /><br />");
-		Iterator<HashMap> it = kirjat.iterator();
-		int i = 1;
-		while (it.hasNext())
-		{
-		    HashMap kirja = it.next();
-		    out.println("L&auml;hde " + i + ":<br />");
-		    Iterator hit = kirja.entrySet().iterator();
-		    while (hit.hasNext())
-		    {
-			Map.Entry pairs = (Map.Entry) hit.next();
-			out.println(pairs.getKey() + " == " + pairs.getValue() + "<br />");
-		    }
-		    //Do something with obj
-		    i++;
-		}
-		out.println("<br /><br />");
 
-		footer(out, cntxt);
-	    }
-	    else if (action.equals("add"))
-	    {
-		header(request, response, out);
 
-		// Post?
-		if (isPost)
-		{
-		    HashMap<String, String> kirja = new HashMap();
-		    Enumeration paramNames = request.getParameterNames();
-		    while (paramNames.hasMoreElements())
-		    {
-			String paramName = (String) paramNames.nextElement();
-			if (paramName.equals("action"))
-			{
-			    continue;
-			}
-			String paramValue = (String) request.getParameter(paramName);
-			kirja.put(paramName, paramValue);
-			//out.print(paramName+"=="+paramValue);
-		    }
-		    kirjat.add(kirja);
-		}
 
-		// Lis&auml;yslomake
-		out.println("<br /><br /><form method=\"post\" action=\"?action=add\">"
-			+ "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
-			+ "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
-			+ "Vuosi:<br /><input type=\"text\" name=\"year\" /><br />"
-			+ "<input type=\"submit\" value=\"Lis&auml;&auml;\" /><br />"
-			+ "</form><br /><br />");
 
-		try
-		{
-		    String arvo = request.getParameter("arvo");
-		    if (!arvo.isEmpty())
-		    {
-			out.println("Arvo oli: " + arvo + "<br />");
-		    }
-		}
-		catch (Exception e)
-		{
-		    //
-		}
+                try {
+                    String arvo = request.getParameter("arvo");
+                    if (!arvo.isEmpty()) {
+                        out.println("Arvo oli: " + arvo + "<br />");
+                    }
+                } catch (Exception e) {
+                    //
+                }
 
-		footer(out, cntxt);
-	    }
-	    else
-	    {
-		header(request, response, out);
-		out.println("<h1>Tervetuloa!</h1>");
-		footer(out, cntxt);
-	    }
-	}
-	finally
-	{
-	    out.close();
-	}
+                footer(out, cntxt);
+            } else {
+                header(request, response, out);
+                out.println("<h1>Tervetuloa!</h1>");
+                footer(out, cntxt);
+            }
+        } finally {
+            out.close();
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -224,9 +241,8 @@ public class ViitekaluServlet extends HttpServlet
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-	    throws ServletException, IOException
-    {
-	processRequest(request, response, false);
+            throws ServletException, IOException {
+        processRequest(request, response, false);
     }
 
     /**
@@ -240,9 +256,8 @@ public class ViitekaluServlet extends HttpServlet
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-	    throws ServletException, IOException
-    {
-	processRequest(request, response, true);
+            throws ServletException, IOException {
+        processRequest(request, response, true);
     }
 
     /**
@@ -251,8 +266,7 @@ public class ViitekaluServlet extends HttpServlet
      * @return a String containing servlet description
      */
     @Override
-    public String getServletInfo()
-    {
-	return "Short description";
+    public String getServletInfo() {
+        return "Short description";
     }// </editor-fold>
 }
