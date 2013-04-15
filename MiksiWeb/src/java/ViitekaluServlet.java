@@ -26,6 +26,7 @@ public class ViitekaluServlet extends HttpServlet {
     // Kirjat
 
     List<HashMap> kirjat = new ArrayList();
+    int lisattyjaViitteita=-1;
 
     /**
      * Print default header
@@ -107,7 +108,7 @@ public class ViitekaluServlet extends HttpServlet {
 
             // BIBTEX-export
             if (action.equals("bibtex")) {
-                Parseri parseri = new Parseri(kirjat);
+                Parseri parseri = new Parseri(kirjat,lisattyjaViitteita);
                 response.setContentType("application/x-bibtex;charset=UTF-8");
                 response.setHeader("Content-Disposition", "attachment;filename=viittet.bib");
 
@@ -152,6 +153,7 @@ public class ViitekaluServlet extends HttpServlet {
                         //out.print(paramName+"=="+paramValue);
                     }
                     kirjat.add(kirja);
+                    lisattyjaViitteita++;
                 }
 
                 // Lis&auml;yslomake

@@ -49,7 +49,7 @@ public class ParseriTest {
         String tulos;
 
         Parseri parser = new Parseri();
-        tulos = parser.muutaBibTexMuotoon(type, author, title, year /*, publisher*/);
+        tulos = parser.muutaBibTexMuotoonKirja(type, author, title, year , publisher);
 
         String odotettuTulos = "";
         odotettuTulos = odotettuTulos.concat("@" + type + "{");
@@ -57,7 +57,7 @@ public class ParseriTest {
         odotettuTulos = odotettuTulos.concat("author = {" + author + "}, \n");
         odotettuTulos = odotettuTulos.concat("title = {" + title + "}, \n");
         odotettuTulos = odotettuTulos.concat("year = {" + year + "}, \n");
-        // odotettuTulos = odotettuTulos.concat("julkaisija = {" + publisher + "}, \n");
+        odotettuTulos = odotettuTulos.concat("julkaisija = {" + publisher + "}, \n");
         odotettuTulos = odotettuTulos.concat("} \n");
 
         assertEquals(odotettuTulos, tulos);
@@ -71,7 +71,7 @@ public class ParseriTest {
          kirja.put("title", "clean code");
          kirja.put("year", "2008");
          kirjat.add(kirja);
-         Parseri parser = new Parseri(kirjat);
+         Parseri parser = new Parseri(kirjat,1);
          System.out.println(parser.getBibTex());
      }
 }
