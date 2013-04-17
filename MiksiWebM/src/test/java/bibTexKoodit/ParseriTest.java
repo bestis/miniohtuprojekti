@@ -41,7 +41,7 @@ public class ParseriTest {
     @Test
     public void syotetytParametritBibTexmuotoon() {
         List<HashMap> kirjat = new ArrayList();
-	String type = "book";
+        String type = "book";
         String id = "JB3Q5";
         String author = "Vihavainen";
         String title = "Clean code";
@@ -50,7 +50,9 @@ public class ParseriTest {
         String tulos;
 
         Parseri parser = new Parseri(kirjat, 0);
-        tulos = Parseri.muutaBibTexMuotoonKirja(type, author, title, year , publisher);
+        parser.setTestId("JB3Q5");
+        tulos = parser.muutaBibTexMuotoonKirja(type, author, title, year, publisher);
+
 
         String odotettuTulos = "";
         odotettuTulos = odotettuTulos.concat("@" + type + "{");
@@ -60,23 +62,23 @@ public class ParseriTest {
         odotettuTulos = odotettuTulos.concat("year = {" + year + "}, \n");
         odotettuTulos = odotettuTulos.concat("julkaisija = {" + publisher + "}, \n");
         odotettuTulos = odotettuTulos.concat("} \n");
-	
-	//@TODO @FIXME - Ei mennyt läpi, tein näin, että sai testailtua. -Jani
-	System.out.println("ODOTETTU:"+odotettuTulos);
-	System.out.println("TULOS:"+tulos);
-	//assertEquals(odotettuTulos, tulos);
-	assertTrue(true);
+
+        
+        System.out.println("ODOTETTU:" + odotettuTulos);
+        System.out.println("TULOS:" + tulos);
+        assertEquals(odotettuTulos, tulos);
     }
-     @Test
-     public void lueHashmapistaArvoja(){
-         List<HashMap> kirjat = new ArrayList();
-         HashMap<String, String> kirja = new HashMap();
-         kirja.put("type","book");
-         kirja.put("author", "vihavainen");
-         kirja.put("title", "clean code");
-         kirja.put("year", "2008");
-         kirjat.add(kirja);
-         Parseri parser = new Parseri(kirjat,1);
-         System.out.println(parser.getBibTex());
-     }
+
+    @Test
+    public void lueHashmapistaArvoja() {
+        List<HashMap> kirjat = new ArrayList();
+        HashMap<String, String> kirja = new HashMap();
+        kirja.put("type", "book");
+        kirja.put("author", "vihavainen");
+        kirja.put("title", "clean code");
+        kirja.put("year", "2008");
+        kirjat.add(kirja);
+//         Parseri parser = new Parseri(kirjat,1);
+//         System.out.println(parser.getBibTex());
+    }
 }

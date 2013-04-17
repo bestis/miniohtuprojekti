@@ -13,6 +13,7 @@ import java.util.*;
 public class Parseri {
 
     static String bibTexTulos = "";
+    static boolean testId = false;
     static String viiteId;
     static String IdCharit = "ABCDEFGHIJKLMNOPQRST0123456789";
     static Random rng = new Random();
@@ -41,7 +42,9 @@ public class Parseri {
 
     public static String muutaBibTexMuotoonKirja(String type, String author,
             String title, String year, String publisher) {
-        viiteId = generoiId(rng, IdCharit, 5);
+        if (!testId) {
+            viiteId = generoiId(rng, IdCharit, 5);
+        }
 
         bibTexTulos = bibTexTulos.concat("@" + type + "{");
         bibTexTulos = bibTexTulos.concat(viiteId + ", \n");
@@ -50,12 +53,10 @@ public class Parseri {
         bibTexTulos = bibTexTulos.concat("year = {" + year + "}, \n");
         bibTexTulos = bibTexTulos.concat("julkaisija = {" + publisher + "}, \n");
         bibTexTulos = bibTexTulos.concat("} \n");
-
-
         return bibTexTulos;
     }
 
-    public static String muutaBibTexMuotoonArtikkeli(String type, String author, 
+    public static String muutaBibTexMuotoonArtikkeli(String type, String author,
             String title, String year, String month, String journal, String volume,
             String pages, String address, String publisher) {
         viiteId = generoiId(rng, IdCharit, 5);
@@ -104,7 +105,7 @@ public class Parseri {
                 String year = viite.get("year");
                 String publisher = viite.get("publisher");
                 muutaBibTexMuotoonKirja("book", author, title, year, publisher);
-            
+
             } else if (viite.get("type").equals("article")) {
                 String author = viite.get("author");
                 String title = viite.get("title");
@@ -125,7 +126,7 @@ public class Parseri {
                 String year = viite.get("year");
                 String publisher = viite.get("publisher");
                 muutaBibTexMuotoonInproceedings("inproceedings", author, title,
-                booktitle, year, publisher);
+                        booktitle, year, publisher);
 
 
             }
@@ -134,6 +135,11 @@ public class Parseri {
 
         lisattyjaViitteita++;
         return bibTexTulos;
+    }
+
+    public void setTestId(String id) {
+        this.testId = true;
+        this.viiteId = id;
     }
 
     public static String generoiId(Random rng, String characters, int length) {
@@ -146,4 +152,3 @@ public class Parseri {
         return new String(text);
     }
 }
-

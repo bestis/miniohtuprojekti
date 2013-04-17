@@ -126,127 +126,12 @@ public class ViitekaluServlet extends HttpServlet {
                 action = "";
             }
 
-            // BIBTEX-export
             if (action.equals("bibtex")) {
-                Parseri parseri = new Parseri(viitteet, lisattyjaViitteita);
-                response.setContentType("application/x-bibtex;charset=UTF-8");
-                response.setHeader("Content-Disposition", "attachment;filename=viittet.bib");
-                out.println(parseri.getBibTex());
-                out.close();
-
-
+                exportBibTex(response, out);
             } else if (action.equals("list")) {
-                header(request, response, out);
-
-                out.println("<br />L&auml;hdelistaus<br /><br />");
-                Iterator<HashMap> it = viitteet.iterator();
-                int i = 1;
-                while (it.hasNext()) {
-                    HashMap kirja = it.next();
-                    out.println("L&auml;hde " + i + ":<br />");
-                    Iterator hit = kirja.entrySet().iterator();
-                    while (hit.hasNext()) {
-                        Map.Entry pairs = (Map.Entry) hit.next();
-                        out.println(pairs.getKey() + " == " + pairs.getValue() + "<br />");
-                    }
-                    //Do something with obj
-                    i++;
-                }
-                out.println("<br /><br />");
-
-                footer(out, cntxt);
+                printList(request, response, out, cntxt);
             } else if (action.equals("add")) {
-                header(request, response, out);
-
-                // Post?
-                if (isPost) {
-                    HashMap<String, String> viite = new HashMap();
-                    Enumeration paramNames = request.getParameterNames();
-                    while (paramNames.hasMoreElements()) {
-                        String paramName = (String) paramNames.nextElement();
-                        if (paramName.equals("action")) {
-                            continue;
-                        }
-                        String paramValue = (String) request.getParameter(paramName);
-                        viite.put(paramName, paramValue);
-                        //out.print(paramName+"=="+paramValue);
-                    }
-                    
-                        viitteet.add(viite);
-                        lisattyjaViitteita++;
-
-                    
-
-                }
-
-                // Lis&auml;yslomake
-
-                out.println("<script type=\"text/javascript\">function naytaKirja(id){ document.getElementById(id).style.display='block';"
-                        + "document.getElementById('artikkeli').style.display='none';"
-                        + "document.getElementById('inproceedings').style.display='none';}</script>");
-                out.println("<script type=\"text/javascript\">function naytaArtikkeli(id){ document.getElementById(id).style.display='block';"
-                        + "document.getElementById('kirja').style.display='none';"
-                        + "document.getElementById('inproceedings').style.display='none';}</script>");
-                out.println("<script type=\"text/javascript\">function naytaInproceedings(id) {document.getElementById(id).style.display='block';"
-                        + "document.getElementById('artikkeli').style.display='none';"
-                        + "document.getElementById('kirja').style.display='none';}</script>");
-
-                out.println("Book:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaKirja('kirja');\"> ");
-                out.println("Article:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaArtikkeli('artikkeli');\" > ");
-                out.println("Inproceedings:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaInproceedings('inproceedings');\"  >");
-
-
-                out.println("<div class=\"kirjalomake\" id=\"kirja\" style=\"display:none\">"
-                        + "<br /><br /><form method=\"post\" action=\"?action=add\">"
-                        + "<input type=\"hidden\" name=\"type\" value=\"book\" />"
-                        + "Julkaisija:<br /><input type=\"text\" name=\"publisher\" /><br />"
-                        + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
-                        + "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
-                        + "Vuosi:<br /><input type=\"text\" name=\"year\" /><br />"
-                        + "<input type=\"submit\" value=\"Lis&auml;&auml;\" /><br />"
-                        + "</form><br /><br /></div>");
-
-                out.println("<div class=\"artikkelilomake\" id=\"artikkeli\" style=\"display:none\">"
-                        + "<br /><br /><form method=\"post\" action=\"?action=add\">"
-                        + "<input type=\"hidden\" name=\"type\" value=\"article\" />"
-                        + "Journal:<br /><input type=\"text\" name=\"journal\" /><br />"
-                        + "Volume:<br /><input type=\"text\" name=\"volume\" /><br />"
-                        + "Number:<br /><input type=\"text\" name=\"number\" /><br />"
-                        + "Month:<br /><input type=\"text\" name=\"month\" /><br />"
-                        + "Year:<br /><input type=\"text\" name=\"year\" /><br />"
-                        + "Pages:<br /><input type=\"text\" name=\"pages\" /><br />"
-                        + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
-                        + "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
-                        + "Julkaisija:<br /><input type=\"text\" name=\"publisher\" /><br />"
-                        + "Osoite:<br /><input type=\"text\" name=\"address\" /><br />"
-                        + "<input type=\"submit\" value=\"Lis&auml;&auml;\" /><br />"
-                        + "</form><br /><br /></div>");
-
-                out.println("<div class=\"inproceedingslomake\" id=\"inproceedings\" style=\"display:none\">"
-                        + "<br /><br /><form method=\"post\" action=\"?action=add\">"
-                        + "<input type=\"hidden\" name=\"type\" value=\"inproceedings\" />"
-                        + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
-                        + "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
-                        + "Booktitle:<br /><input type=\"text\" name=\"booktitle\" /><br />"
-                        + "Vuosi:<br /><input type=\"text\" name=\"year\" /><br />"
-                        + "Julkaisija:<br /><input type=\"text\" name=\"publisher\" /><br />"
-                        + "<input type=\"submit\" value=\"Lis&auml;&auml;\" /><br />"
-                        + "</form><br /><br /></div>");
-
-
-
-
-
-                try {
-                    String arvo = request.getParameter("arvo");
-                    if (!arvo.isEmpty()) {
-                        out.println("Arvo oli: " + arvo + "<br />");
-                    }
-                } catch (Exception e) {
-                    //
-                }
-
-                footer(out, cntxt);
+                addBibTex(request, response, out, isPost, cntxt);
             } else {
                 header(request, response, out);
                 out.println("<h1>Tervetuloa!</h1>");
@@ -349,6 +234,130 @@ public class ViitekaluServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private void exportBibTex(HttpServletResponse response, PrintWriter out) {
+        Parseri parseri = new Parseri(viitteet, lisattyjaViitteita);
+        response.setContentType("application/x-bibtex;charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment;filename=viittet.bib");
+        out.println(parseri.getBibTex());
+        out.close();
+    }
+
+    private void printList(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
+        header(request, response, out);
+
+        out.println("<br />L&auml;hdelistaus<br /><br />");
+        Iterator<HashMap> it = viitteet.iterator();
+        int i = 1;
+        while (it.hasNext()) {
+            HashMap kirja = it.next();
+            out.println("L&auml;hde " + i + ":<br />");
+            Iterator hit = kirja.entrySet().iterator();
+            while (hit.hasNext()) {
+                Map.Entry pairs = (Map.Entry) hit.next();
+                out.println(pairs.getKey() + " == " + pairs.getValue() + "<br />");
+            }
+            //Do something with obj
+            i++;
+        }
+        out.println("<br /><br />");
+
+        footer(out, cntxt);
+    }
+
+    private void addBibTex(HttpServletRequest request, HttpServletResponse response, PrintWriter out, boolean isPost, ServletContext cntxt) {
+        header(request, response, out);
+
+        // Post?
+        if (isPost) {
+            HashMap<String, String> viite = new HashMap();
+            Enumeration paramNames = request.getParameterNames();
+            while (paramNames.hasMoreElements()) {
+                String paramName = (String) paramNames.nextElement();
+                if (paramName.equals("action")) {
+                    continue;
+                }
+                String paramValue = (String) request.getParameter(paramName);
+                viite.put(paramName, paramValue);
+                //out.print(paramName+"=="+paramValue);
+            }
+            
+                viitteet.add(viite);
+                lisattyjaViitteita++;
+
+            
+
+        }
+
+        // Lis&auml;yslomake
+
+        out.println("<script type=\"text/javascript\">function naytaKirja(id){ document.getElementById(id).style.display='block';"
+                + "document.getElementById('artikkeli').style.display='none';"
+                + "document.getElementById('inproceedings').style.display='none';}</script>");
+        out.println("<script type=\"text/javascript\">function naytaArtikkeli(id){ document.getElementById(id).style.display='block';"
+                + "document.getElementById('kirja').style.display='none';"
+                + "document.getElementById('inproceedings').style.display='none';}</script>");
+        out.println("<script type=\"text/javascript\">function naytaInproceedings(id) {document.getElementById(id).style.display='block';"
+                + "document.getElementById('artikkeli').style.display='none';"
+                + "document.getElementById('kirja').style.display='none';}</script>");
+
+        out.println("Book:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaKirja('kirja');\"> ");
+        out.println("Article:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaArtikkeli('artikkeli');\" > ");
+        out.println("Inproceedings:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaInproceedings('inproceedings');\"  >");
+
+
+        out.println("<div class=\"kirjalomake\" id=\"kirja\" style=\"display:none\">"
+                + "<br /><br /><form method=\"post\" action=\"?action=add\">"
+                + "<input type=\"hidden\" name=\"type\" value=\"book\" />"
+                + "Julkaisija:<br /><input type=\"text\" name=\"publisher\" /><br />"
+                + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
+                + "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
+                + "Vuosi:<br /><input type=\"text\" name=\"year\" /><br />"
+                + "<input type=\"submit\" value=\"Lis&auml;&auml;\" /><br />"
+                + "</form><br /><br /></div>");
+
+        out.println("<div class=\"artikkelilomake\" id=\"artikkeli\" style=\"display:none\">"
+                + "<br /><br /><form method=\"post\" action=\"?action=add\">"
+                + "<input type=\"hidden\" name=\"type\" value=\"article\" />"
+                + "Journal:<br /><input type=\"text\" name=\"journal\" /><br />"
+                + "Volume:<br /><input type=\"text\" name=\"volume\" /><br />"
+                + "Number:<br /><input type=\"text\" name=\"number\" /><br />"
+                + "Month:<br /><input type=\"text\" name=\"month\" /><br />"
+                + "Year:<br /><input type=\"text\" name=\"year\" /><br />"
+                + "Pages:<br /><input type=\"text\" name=\"pages\" /><br />"
+                + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
+                + "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
+                + "Julkaisija:<br /><input type=\"text\" name=\"publisher\" /><br />"
+                + "Osoite:<br /><input type=\"text\" name=\"address\" /><br />"
+                + "<input type=\"submit\" value=\"Lis&auml;&auml;\" /><br />"
+                + "</form><br /><br /></div>");
+
+        out.println("<div class=\"inproceedingslomake\" id=\"inproceedings\" style=\"display:none\">"
+                + "<br /><br /><form method=\"post\" action=\"?action=add\">"
+                + "<input type=\"hidden\" name=\"type\" value=\"inproceedings\" />"
+                + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
+                + "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
+                + "Booktitle:<br /><input type=\"text\" name=\"booktitle\" /><br />"
+                + "Vuosi:<br /><input type=\"text\" name=\"year\" /><br />"
+                + "Julkaisija:<br /><input type=\"text\" name=\"publisher\" /><br />"
+                + "<input type=\"submit\" value=\"Lis&auml;&auml;\" /><br />"
+                + "</form><br /><br /></div>");
+
+
+
+
+
+        try {
+            String arvo = request.getParameter("arvo");
+            if (!arvo.isEmpty()) {
+                out.println("Arvo oli: " + arvo + "<br />");
+            }
+        } catch (Exception e) {
+            //
+        }
+
+        footer(out, cntxt);
+    }
     
     
 }
