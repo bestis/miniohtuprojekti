@@ -77,8 +77,18 @@ public class Parseri {
         return bibTexTulos;
     }
 
-    public static String muutaBibTexMuotoonInproceedings() {
-        //to do
+    public static String muutaBibTexMuotoonInproceedings(String type, 
+            String author, String title, String booktitle, String year, String publisher) {
+        
+        viiteId = generoiId(rng, IdCharit, 5);
+
+        bibTexTulos = bibTexTulos.concat("@" + type + "{");
+        bibTexTulos = bibTexTulos.concat(viiteId + ", \n");
+        bibTexTulos = bibTexTulos.concat("author = {" + author + "}, \n");
+        bibTexTulos = bibTexTulos.concat("title = {" + title + "}, \n");
+        bibTexTulos = bibTexTulos.concat("booktitle = {" + booktitle + "}, \n");
+        bibTexTulos = bibTexTulos.concat("year = {" + year + "}, \n");
+        bibTexTulos = bibTexTulos.concat("publisher = {" + publisher + "}, \n");
         return bibTexTulos;
     }
 
@@ -133,4 +143,6 @@ public class Parseri {
         }
         return new String(text);
     }
+
+
 }
