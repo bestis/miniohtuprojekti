@@ -57,12 +57,28 @@ public class Parseri {
         onMuutettu = true;
         return bibTexTulos;
     }
-    public static String muutaBibTexMuotoonArtikkeli(){
-        //to do
+
+    public static String muutaBibTexMuotoonArtikkeli(String type, String author,
+            String title, String year, String month, String journal, String volume,
+            String pages, String address, String publisher) {
+        viiteId = generoiId(rng, IdCharit, 5);
+
+        bibTexTulos = bibTexTulos.concat("@" + type + "{");
+        bibTexTulos = bibTexTulos.concat(viiteId + ", \n");
+        bibTexTulos = bibTexTulos.concat("author = {" + author + "}, \n");
+        bibTexTulos = bibTexTulos.concat("title = {" + title + "}, \n");
+        bibTexTulos = bibTexTulos.concat("year = {" + year + "}, \n");
+        bibTexTulos = bibTexTulos.concat("month = {" + month + "}, \n");
+        bibTexTulos = bibTexTulos.concat("journal = {" + journal + "}, \n");
+        bibTexTulos = bibTexTulos.concat("volume = {" + volume + "}, \n");
+        bibTexTulos = bibTexTulos.concat("pages = {" + pages + "}, \n");
+        bibTexTulos = bibTexTulos.concat("address = {" + address + "}, \n");
+        bibTexTulos = bibTexTulos.concat("publisher = {" + publisher + "}, \n");
         return bibTexTulos;
     }
-     public static String muutaBibTexMuotoonInproceedings(){
-         //to do
+
+    public static String muutaBibTexMuotoonInproceedings() {
+        //to do
         return bibTexTulos;
     }
 
@@ -78,8 +94,7 @@ public class Parseri {
                 String year = viite.get("year");
                 String publisher = viite.get("publisher");
                 muutaBibTexMuotoonKirja("book", author, title, year, publisher);
-            }
-            else if(viite.get("type").equals("article")){
+            } else if (viite.get("type").equals("article")) {
                 String author = viite.get("author");
                 String title = viite.get("title");
                 String year = viite.get("year");
@@ -89,19 +104,18 @@ public class Parseri {
                 String pages = viite.get("pages");
                 String address = viite.get("address");
                 String publisher = viite.get("publisher");
-                muutaBibTexMuotoonArtikkeli();
-                
-                
-            }
-            else if(viite.get("type").equals("inproceedings")){
+                muutaBibTexMuotoonArtikkeli("article", author, title, year, month, journal, volume, pages, address, publisher);
+
+
+            } else if (viite.get("type").equals("inproceedings")) {
                 String author = viite.get("author");
                 String title = viite.get("title");
                 String booktitle = viite.get("booktitle");
                 String year = viite.get("year");
                 String publisher = viite.get("publisher");
-                muutaBibTexMuotoonInproceedings();
-                
-                
+                muutaBibTexMuotoonInproceedings("article", author, title, booktitle, year, publisher);
+
+
             }
 
         }
