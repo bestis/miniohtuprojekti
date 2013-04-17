@@ -4,6 +4,11 @@
  */
 package com.miksiohtu.miksiwebm;
 
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -112,9 +117,8 @@ public class ViitekaluServlet extends HttpServlet {
                 Parseri parseri = new Parseri(viitteet, lisattyjaViitteita);
                 response.setContentType("application/x-bibtex;charset=UTF-8");
                 response.setHeader("Content-Disposition", "attachment;filename=viittet.bib");
-
-
                 out.println(parseri.getBibTex());
+                out.close();
 
 
             } else if (action.equals("list")) {
@@ -190,6 +194,7 @@ public class ViitekaluServlet extends HttpServlet {
 
                 out.println("<div class=\"artikkelilomake\" id=\"artikkeli\" style=\"display:none\">"
                         + "<br /><br /><form method=\"post\" action=\"?action=add\">"
+                        + "<input type=\"hidden\" name=\"type\" value=\"article\" />"
                         + "Journal:<br /><input type=\"text\" name=\"journal\" /><br />"
                         + "Volume:<br /><input type=\"text\" name=\"volume\" /><br />"
                         + "Number:<br /><input type=\"text\" name=\"number\" /><br />"
@@ -205,6 +210,7 @@ public class ViitekaluServlet extends HttpServlet {
 
                 out.println("<div class=\"inproceedingslomake\" id=\"inproceedings\" style=\"display:none\">"
                         + "<br /><br /><form method=\"post\" action=\"?action=add\">"
+                        + "<input type=\"hidden\" name=\"type\" value=\"inproceedings\" />"
                         + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
                         + "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
                         + "Booktitle:<br /><input type=\"text\" name=\"booktitle\" /><br />"
@@ -278,3 +284,4 @@ public class ViitekaluServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 }
+

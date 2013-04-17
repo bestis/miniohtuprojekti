@@ -71,6 +71,7 @@ public class ParseriTest {
      public void lueHashmapistaArvoja(){
          List<HashMap> kirjat = new ArrayList();
          HashMap<String, String> kirja = new HashMap();
+         kirja.put("type","book");
          kirja.put("author", "vihavainen");
          kirja.put("title", "clean code");
          kirja.put("year", "2008");
