@@ -14,7 +14,7 @@ public class Parseri {
 
     static String bibTexTulos = "";
     static boolean testId = false;
-//    static String viiteId;
+    static String viiteId;
     static String IdCharit = "ABCDEFGHIJKLMNOPQRST0123456789";
     static Random rng = new Random();
     static List<HashMap> viitteet;
@@ -128,11 +128,6 @@ public class Parseri {
         }
 //        lisattyjaViitteita++;
         return bibTexTulos;
-    }
-
-    public void setTestId(String id) {
-        this.testId = true;
-        this.viiteId = id;
     }
 
     public static String generoiId(Random rng, String characters, int length) {
