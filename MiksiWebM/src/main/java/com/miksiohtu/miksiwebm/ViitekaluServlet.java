@@ -44,7 +44,7 @@ public class ViitekaluServlet extends HttpServlet {
         out.println("<title>ViitekaluServlet</title>");
         out.println("</head>");
         out.println("<body>");
-        out.println("<h1>ViitekaluServlet at " + request.getContextPath() + "</h1>");
+        out.println("<h1>ViitekaluServlet (" + request.getContextPath() + ")</h1>");
 
         out.println("<nav>");
         out.println("<a href=\"?action=add\">Lis&auml;&auml; l&auml;hde</a> | ");
