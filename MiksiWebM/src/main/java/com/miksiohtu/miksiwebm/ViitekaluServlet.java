@@ -23,6 +23,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import bibTexKoodit.Parseri;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -243,6 +255,58 @@ public class ViitekaluServlet extends HttpServlet {
         }
     }
 
+
+    @Override
+    public void init() throws ServletException
+    {
+	try
+	{
+	    super.init();
+	    // Load old
+	    XMLDecoder d = new XMLDecoder(new BufferedInputStream(new FileInputStream("viitteet.xml")));
+	    this.viitteet = (List<HashMap>) d.readObject();
+	    d.close();
+	}
+	catch (FileNotFoundException ex)
+	{
+	    Logger.getLogger(ViitekaluServlet.class.getName()).log(Level.SEVERE, null, ex);
+	}
+    }
+  
+    @Override
+    public void destroy()
+    {
+	BufferedWriter writer = null;
+	try
+	{
+	    writer = new BufferedWriter(new FileWriter(new File("viitteet.xml")));
+	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	    XMLEncoder xmlEncoder = new XMLEncoder(bos);
+	    xmlEncoder.writeObject(viitteet);
+	    xmlEncoder.flush();
+	    writer.write(bos.toString());
+	    writer.close();
+	}
+	catch (IOException ex)
+	{
+	    Logger.getLogger(ViitekaluServlet.class.getName()).log(Level.SEVERE, null, ex);
+	}
+	finally
+	{
+	    try
+	    {
+		if (writer != null)
+		{
+		    writer.close();
+		}
+	    }
+	    catch (IOException ex)
+	    {
+		Logger.getLogger(ViitekaluServlet.class.getName()).log(Level.SEVERE, null, ex);
+	    }
+	}
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP
@@ -283,5 +347,7 @@ public class ViitekaluServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
+    
 }
 
