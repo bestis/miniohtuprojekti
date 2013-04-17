@@ -18,12 +18,12 @@ public class Parseri {
     static String viiteId;
     static String IdCharit = "ABCDEFGHIJKLMNOPQRST0123456789";
     static Random rng = new Random();
-    static List<HashMap> kirjat;
+    static List<HashMap> viitteet;
     int lisattyjaViitteita;
 
-    public Parseri(List<HashMap> kirjat,int lisattyjaViitteita) {
-        this.kirjat = kirjat;
-        this.lisattyjaViitteita=lisattyjaViitteita;
+    public Parseri(List<HashMap> kirjat, int lisattyjaViitteita) {
+        this.viitteet = kirjat;
+        this.lisattyjaViitteita = lisattyjaViitteita;
 
 
     }
@@ -31,29 +31,22 @@ public class Parseri {
     public Parseri() {
     }
     /*
-     public static void tiedostoTallennus(String tiedostonimi) {
-     if (onMuutettu == true) {
-     try {
-     PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(tiedostonimi, true)));
-     out.println(bibTexTulos);
-     out.close();
-     } catch (IOException e) {
-     }
-     } else {
-     System.out.println("Kutsu ensin metodia muutaBibTexMuotoon!");
-     }
-
-     }
-     * 
+     * public static void tiedostoTallennus(String tiedostonimi) { if
+     * (onMuutettu == true) { try { PrintWriter out = new PrintWriter(new
+     * BufferedWriter(new FileWriter(tiedostonimi, true)));
+     * out.println(bibTexTulos); out.close(); } catch (IOException e) { } } else
+     * { System.out.println("Kutsu ensin metodia muutaBibTexMuotoon!"); }
+     *
+     * }
+     *
      */
 
     public static String muutaBibTexMuotoonKirja(String type, String author,
             String title, String year, String publisher) {
-        viiteId = generoiId(rng,IdCharit,5);
-        
+        viiteId = generoiId(rng, IdCharit, 5);
+
 
         bibTexTulos = bibTexTulos.concat("@" + type + "{");
-        //joku id vissiin vielä tähän väliin?
         bibTexTulos = bibTexTulos.concat(viiteId + ", \n");
         bibTexTulos = bibTexTulos.concat("author = {" + author + "}, \n");
         bibTexTulos = bibTexTulos.concat("title = {" + title + "}, \n");
@@ -64,34 +57,66 @@ public class Parseri {
         onMuutettu = true;
         return bibTexTulos;
     }
+    public static String muutaBibTexMuotoonArtikkeli(){
+        //to do
+        return bibTexTulos;
+    }
+     public static String muutaBibTexMuotoonInproceedings(){
+         //to do
+        return bibTexTulos;
+    }
 
     public String getBibTex() {
-        HashMap<String, String> kirja;
+        HashMap<String, String> viite;
 
-        for (int i = lisattyjaViitteita; i < kirjat.size(); i++) {
-            kirja = kirjat.get(i);
+        for (int i = lisattyjaViitteita; i < viitteet.size(); i++) {
+            viite = viitteet.get(i);
 
-            String author = kirja.get("author");
-            String title = kirja.get("title");
-            String year = kirja.get("year");
-            String publisher = kirja.get("publisher");
-            muutaBibTexMuotoonKirja("book", author, title, year, publisher);
+            if (viite.get("type").equals("book")) {
+                String author = viite.get("author");
+                String title = viite.get("title");
+                String year = viite.get("year");
+                String publisher = viite.get("publisher");
+                muutaBibTexMuotoonKirja("book", author, title, year, publisher);
+            }
+            else if(viite.get("type").equals("article")){
+                String author = viite.get("author");
+                String title = viite.get("title");
+                String year = viite.get("year");
+                String month = viite.get("month");
+                String journal = viite.get("journal");
+                String volume = viite.get("volume");
+                String pages = viite.get("pages");
+                String address = viite.get("address");
+                String publisher = viite.get("publisher");
+                muutaBibTexMuotoonArtikkeli();
+                
+                
+            }
+            else if(viite.get("type").equals("inproceedings")){
+                String author = viite.get("author");
+                String title = viite.get("title");
+                String booktitle = viite.get("booktitle");
+                String year = viite.get("year");
+                String publisher = viite.get("publisher");
+                muutaBibTexMuotoonInproceedings();
+                
+                
+            }
 
         }
 
         lisattyjaViitteita++;
         return bibTexTulos;
     }
-    public static String generoiId(Random rng, String characters, int length)
-{
-    char[] text = new char[length];
-    for (int i = 0; i < length; i++)
-    {
-        text[i] = characters.charAt(rng.nextInt(characters.length()));
+
+    public static String generoiId(Random rng, String characters, int length) {
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++) {
+            text[i] = characters.charAt(rng.nextInt(characters.length()));
+        }
+        for (int i = 0; i < viitteet.size(); i++) {
+        }
+        return new String(text);
     }
-    for(int i=0; i<kirjat.size(); i++){
-        
-    }
-    return new String(text);
-}
 }
