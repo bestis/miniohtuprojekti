@@ -8,20 +8,6 @@ package com.miksiohtu.miksiwebm;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import bibTexKoodit.Parseri;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -32,22 +18,37 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author bestis
  */
 public class ViitekaluServlet extends HttpServlet {
-    
-    private String VIITEFILE="/home/jmtollik/viitteet.xml";
-    
+
+//    private String VIITEFILE="/home/jmtollik/viitteet.xml";
+    private String VIITEFILE = "C:/Users/nakke/personal_domain/config/viitteet.xml";
     // Kirjat
     List<HashMap> viitteet = new ArrayList();
-    int lisattyjaViitteita = -1;
-
+//  int lisattyjaViitteita = -1;
+    Random rng = new Random();
+    String IdCharit = "ABCDEFGHIJKLMNOPQRST0123456789";
+    
     /**
      * Print default header
      *
@@ -142,58 +143,43 @@ public class ViitekaluServlet extends HttpServlet {
         }
     }
 
+    @Override
+    public void init() throws ServletException {
+        try {
+            super.init();
+            // Load old
+            XMLDecoder d = new XMLDecoder(new BufferedInputStream(new FileInputStream(this.VIITEFILE)));
+            this.viitteet = (List<HashMap>) d.readObject();
+            d.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ViitekaluServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     @Override
-    public void init() throws ServletException
-    {
-	try
-	{
-	    super.init();
-	    // Load old
-	    XMLDecoder d = new XMLDecoder(new BufferedInputStream(new FileInputStream(this.VIITEFILE)));
-	    this.viitteet = (List<HashMap>) d.readObject();
-	    d.close();
-	}
-	catch (FileNotFoundException ex)
-	{
-	    Logger.getLogger(ViitekaluServlet.class.getName()).log(Level.SEVERE, null, ex);
-	}
+    public void destroy() {
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(new File(this.VIITEFILE)));
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            XMLEncoder xmlEncoder = new XMLEncoder(bos);
+            xmlEncoder.writeObject(viitteet);
+            xmlEncoder.flush();
+            writer.write(bos.toString());
+            writer.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ViitekaluServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(ViitekaluServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
-  
-    @Override
-    public void destroy()
-    {
-	BufferedWriter writer = null;
-	try
-	{
-	    writer = new BufferedWriter(new FileWriter(new File(this.VIITEFILE)));
-	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	    XMLEncoder xmlEncoder = new XMLEncoder(bos);
-	    xmlEncoder.writeObject(viitteet);
-	    xmlEncoder.flush();
-	    writer.write(bos.toString());
-	    writer.close();
-	}
-	catch (IOException ex)
-	{
-	    Logger.getLogger(ViitekaluServlet.class.getName()).log(Level.SEVERE, null, ex);
-	}
-	finally
-	{
-	    try
-	    {
-		if (writer != null)
-		{
-		    writer.close();
-		}
-	    }
-	    catch (IOException ex)
-	    {
-		Logger.getLogger(ViitekaluServlet.class.getName()).log(Level.SEVERE, null, ex);
-	    }
-	}
-    }
-    
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP
@@ -235,13 +221,15 @@ public class ViitekaluServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void exportBibTex(HttpServletResponse response, PrintWriter out) {
-        Parseri parseri = new Parseri(viitteet, lisattyjaViitteita);
+    public void exportBibTex(HttpServletResponse response, PrintWriter out) {
+        System.out.println(viitteet.size());
+        Parseri parseri = new Parseri(viitteet);
         response.setContentType("application/x-bibtex;charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment;filename=viittet.bib");
         out.println(parseri.getBibTex());
         out.close();
     }
+
 
     private void printList(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
         header(request, response, out);
@@ -272,6 +260,7 @@ public class ViitekaluServlet extends HttpServlet {
         if (isPost) {
             HashMap<String, String> viite = new HashMap();
             Enumeration paramNames = request.getParameterNames();
+            viite.put("id", generoiId(rng, IdCharit, 5));
             while (paramNames.hasMoreElements()) {
                 String paramName = (String) paramNames.nextElement();
                 if (paramName.equals("action")) {
@@ -281,12 +270,8 @@ public class ViitekaluServlet extends HttpServlet {
                 viite.put(paramName, paramValue);
                 //out.print(paramName+"=="+paramValue);
             }
-            
-                viitteet.add(viite);
-                lisattyjaViitteita++;
-
-            
-
+            viitteet.add(viite);
+//            lisattyjaViitteita++;
         }
 
         // Lis&auml;yslomake
@@ -358,7 +343,11 @@ public class ViitekaluServlet extends HttpServlet {
 
         footer(out, cntxt);
     }
-    
-    
+        public String generoiId(Random rng, String characters, int length) {
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++) {
+            text[i] = characters.charAt(rng.nextInt(characters.length()));
+        }
+        return new String(text);
+    }
 }
-

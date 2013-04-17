@@ -49,9 +49,8 @@ public class ParseriTest {
         String publisher = "jokuvaan";
         String tulos;
 
-        Parseri parser = new Parseri(kirjat, 0);
-        parser.setTestId("JB3Q5");
-        tulos = parser.muutaBibTexMuotoonKirja(type, author, title, year, publisher);
+        Parseri parser = new Parseri(kirjat);
+        tulos = parser.muutaBibTexMuotoonKirja(type, id, author, title, year, publisher);
 
 
         String odotettuTulos = "";
