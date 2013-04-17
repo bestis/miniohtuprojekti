@@ -25,8 +25,8 @@ import bibTexKoodit.Parseri;
 public class ViitekaluServlet extends HttpServlet {
     // Kirjat
 
-    List<HashMap> kirjat = new ArrayList();
-    int lisattyjaViitteita=-1;
+    List<HashMap> viitteet = new ArrayList();
+    int lisattyjaViitteita = -1;
 
     /**
      * Print default header
@@ -65,7 +65,7 @@ public class ViitekaluServlet extends HttpServlet {
         } catch (Exception e) {
             //
         }
-        out.println("Latauksia " + latauksia + ", Kirjoja " + kirjat.size() + "<br />");
+        out.println("Latauksia " + latauksia + ", Kirjoja " + viitteet.size() + "<br />");
         cntxt.setAttribute("hitcount", latauksia + 1);
 
         out.println("</body>");
@@ -108,7 +108,7 @@ public class ViitekaluServlet extends HttpServlet {
 
             // BIBTEX-export
             if (action.equals("bibtex")) {
-                Parseri parseri = new Parseri(kirjat,lisattyjaViitteita);
+                Parseri parseri = new Parseri(viitteet, lisattyjaViitteita);
                 response.setContentType("application/x-bibtex;charset=UTF-8");
                 response.setHeader("Content-Disposition", "attachment;filename=viittet.bib");
 
@@ -120,7 +120,7 @@ public class ViitekaluServlet extends HttpServlet {
                 header(request, response, out);
 
                 out.println("<br />L&auml;hdelistaus<br /><br />");
-                Iterator<HashMap> it = kirjat.iterator();
+                Iterator<HashMap> it = viitteet.iterator();
                 int i = 1;
                 while (it.hasNext()) {
                     HashMap kirja = it.next();
@@ -141,7 +141,7 @@ public class ViitekaluServlet extends HttpServlet {
 
                 // Post?
                 if (isPost) {
-                    HashMap<String, String> kirja = new HashMap();
+                    HashMap<String, String> viite = new HashMap();
                     Enumeration paramNames = request.getParameterNames();
                     while (paramNames.hasMoreElements()) {
                         String paramName = (String) paramNames.nextElement();
@@ -149,15 +149,19 @@ public class ViitekaluServlet extends HttpServlet {
                             continue;
                         }
                         String paramValue = (String) request.getParameter(paramName);
-                        kirja.put(paramName, paramValue);
+                        viite.put(paramName, paramValue);
                         //out.print(paramName+"=="+paramValue);
                     }
-                    kirjat.add(kirja);
-                    lisattyjaViitteita++;
+                    
+                        viitteet.add(viite);
+                        lisattyjaViitteita++;
+
+                    
+
                 }
 
                 // Lis&auml;yslomake
-               
+
                 out.println("<script type=\"text/javascript\">function naytaKirja(id){ document.getElementById(id).style.display='block';"
                         + "document.getElementById('artikkeli').style.display='none';"
                         + "document.getElementById('inproceedings').style.display='none';}</script>");
@@ -167,21 +171,22 @@ public class ViitekaluServlet extends HttpServlet {
                 out.println("<script type=\"text/javascript\">function naytaInproceedings(id) {document.getElementById(id).style.display='block';"
                         + "document.getElementById('artikkeli').style.display='none';"
                         + "document.getElementById('kirja').style.display='none';}</script>");
-                
+
                 out.println("Book:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaKirja('kirja');\"> ");
                 out.println("Article:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaArtikkeli('artikkeli');\" > ");
                 out.println("Inproceedings:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaInproceedings('inproceedings');\"  >");
-                
-                   
+
+
                 out.println("<div class=\"kirjalomake\" id=\"kirja\" style=\"display:none\">"
                         + "<br /><br /><form method=\"post\" action=\"?action=add\">"
+                        + "<input type=\"hidden\" name=\"type\" value=\"book\" />"
                         + "Julkaisija:<br /><input type=\"text\" name=\"publisher\" /><br />"
                         + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
                         + "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
                         + "Vuosi:<br /><input type=\"text\" name=\"year\" /><br />"
                         + "<input type=\"submit\" value=\"Lis&auml;&auml;\" /><br />"
                         + "</form><br /><br /></div>");
-                
+
                 out.println("<div class=\"artikkelilomake\" id=\"artikkeli\" style=\"display:none\">"
                         + "<br /><br /><form method=\"post\" action=\"?action=add\">"
                         + "Journal:<br /><input type=\"text\" name=\"journal\" /><br />"
@@ -196,7 +201,7 @@ public class ViitekaluServlet extends HttpServlet {
                         + "Osoite:<br /><input type=\"text\" name=\"address\" /><br />"
                         + "<input type=\"submit\" value=\"Lis&auml;&auml;\" /><br />"
                         + "</form><br /><br /></div>");
-                
+
                 out.println("<div class=\"inproceedingslomake\" id=\"inproceedings\" style=\"display:none\">"
                         + "<br /><br /><form method=\"post\" action=\"?action=add\">"
                         + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
