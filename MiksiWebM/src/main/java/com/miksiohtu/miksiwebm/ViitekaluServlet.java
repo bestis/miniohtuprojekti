@@ -71,7 +71,7 @@ public class ViitekaluServlet extends HttpServlet {
         } catch (Exception e) {
             //
         }
-        out.println("Latauksia " + latauksia + ", Kirjoja " + viitteet.size() + "<br />");
+        out.println("<br /><br />Latauksia " + latauksia + ", Kirjoja " + viitteet.size() + "<br />");
         cntxt.setAttribute("hitcount", latauksia + 1);
 
         out.println("</body>");
