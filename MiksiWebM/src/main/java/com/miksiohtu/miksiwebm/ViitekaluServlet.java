@@ -41,13 +41,14 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ViitekaluServlet extends HttpServlet {
 
-    private String VIITEFILE="/home/jmtollik/viitteet.xml";
+    private String VIITEFILE = "C:/Users/nakke/personal_domain/config/viitteet.xml";
+//    private String VIITEFILE="/home/jmtollik/viitteet.xml";
     // Kirjat
     List<HashMap> viitteet = new ArrayList();
 //  int lisattyjaViitteita = -1;
     Random rng = new Random();
     String IdCharit = "ABCDEFGHIJKLMNOPQRST0123456789";
-    
+
     /**
      * Print default header
      *
@@ -68,7 +69,8 @@ public class ViitekaluServlet extends HttpServlet {
         out.println("<nav>");
         out.println("<a href=\"?action=add\">Lis&auml;&auml; l&auml;hde</a> | ");
         out.println("<a href=\"?action=list\">Listaa l&auml;hteet</a> | ");
-        out.println("<a href=\"?action=bibtex\">Lataa BIBTEX</a>");
+        out.println("<a href=\"?action=showbibtex\">N&auml;yt&auml; BibTeX</a> | ");
+        out.println("<a href=\"?action=bibtex\">Lataa BibTeX</a>");
         out.println("</nav>");
     }
 
@@ -129,7 +131,9 @@ public class ViitekaluServlet extends HttpServlet {
             if (action.equals("bibtex")) {
                 exportBibTex(response, out);
             } else if (action.equals("list")) {
-                printList(request, response, out, cntxt);
+                listBibtexReadable(request, response, out, cntxt);
+            } else if (action.equals("showbibtex")) {
+                listBibtex(request, response, out, cntxt);
             } else if (action.equals("add")) {
                 addBibTex(request, response, out, isPost, cntxt);
             } else {
@@ -220,7 +224,7 @@ public class ViitekaluServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    public void exportBibTex(HttpServletResponse response, PrintWriter out) {
+    private void exportBibTex(HttpServletResponse response, PrintWriter out) {
         System.out.println(viitteet.size());
         Parseri parseri = new Parseri(viitteet);
         response.setContentType("application/x-bibtex;charset=UTF-8");
@@ -229,8 +233,7 @@ public class ViitekaluServlet extends HttpServlet {
         out.close();
     }
 
-
-    private void printList(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
+    private void listBibtexReadable(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
         header(request, response, out);
 
         out.println("<br />L&auml;hdelistaus<br /><br />");
@@ -242,14 +245,25 @@ public class ViitekaluServlet extends HttpServlet {
             Iterator hit = kirja.entrySet().iterator();
             while (hit.hasNext()) {
                 Map.Entry pairs = (Map.Entry) hit.next();
-                out.println(pairs.getKey() + " == " + pairs.getValue() + "<br />");
+                out.println(pairs.getKey() + ": " + pairs.getValue() + "<br />");
             }
+            out.println("<br />");
             //Do something with obj
             i++;
         }
         out.println("<br /><br />");
 
         footer(out, cntxt);
+    }
+
+    private void listBibtex(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
+        header(request, response, out);
+        out.println("<br />BibTeX:<br /><br />");
+        Parseri parseri = new Parseri(viitteet);
+        out.println("<pre>");
+        out.println(parseri.getBibTex());
+        out.println("</pre>");
+        out.close();
     }
 
     private void addBibTex(HttpServletRequest request, HttpServletResponse response, PrintWriter out, boolean isPost, ServletContext cntxt) {
@@ -342,7 +356,8 @@ public class ViitekaluServlet extends HttpServlet {
 
         footer(out, cntxt);
     }
-        public String generoiId(Random rng, String characters, int length) {
+
+    public String generoiId(Random rng, String characters, int length) {
         char[] text = new char[length];
         for (int i = 0; i < length; i++) {
             text[i] = characters.charAt(rng.nextInt(characters.length()));
