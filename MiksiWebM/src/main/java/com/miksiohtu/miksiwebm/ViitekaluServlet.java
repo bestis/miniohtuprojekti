@@ -41,8 +41,10 @@ import java.util.logging.Logger;
  * @author bestis
  */
 public class ViitekaluServlet extends HttpServlet {
+    
+    private String VIITEFILE="/home/jmtollik/viitteet.xml";
+    
     // Kirjat
-
     List<HashMap> viitteet = new ArrayList();
     int lisattyjaViitteita = -1;
 
@@ -263,7 +265,7 @@ public class ViitekaluServlet extends HttpServlet {
 	{
 	    super.init();
 	    // Load old
-	    XMLDecoder d = new XMLDecoder(new BufferedInputStream(new FileInputStream("viitteet.xml")));
+	    XMLDecoder d = new XMLDecoder(new BufferedInputStream(new FileInputStream(this.VIITEFILE)));
 	    this.viitteet = (List<HashMap>) d.readObject();
 	    d.close();
 	}
@@ -279,7 +281,7 @@ public class ViitekaluServlet extends HttpServlet {
 	BufferedWriter writer = null;
 	try
 	{
-	    writer = new BufferedWriter(new FileWriter(new File("viitteet.xml")));
+	    writer = new BufferedWriter(new FileWriter(new File(this.VIITEFILE)));
 	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
 	    XMLEncoder xmlEncoder = new XMLEncoder(bos);
 	    xmlEncoder.writeObject(viitteet);
