@@ -46,7 +46,7 @@ public class Parseri {
         bibTexTulos = bibTexTulos.concat("author = {" + author + "}, \n");
         bibTexTulos = bibTexTulos.concat("title = {" + title + "}, \n");
         bibTexTulos = bibTexTulos.concat("year = {" + year + "}, \n");
-        bibTexTulos = bibTexTulos.concat("julkaisija = {" + publisher + "}, \n");
+        bibTexTulos = bibTexTulos.concat("publisher = {" + publisher + "}, \n");
         bibTexTulos = bibTexTulos.concat("} \n");
         return bibTexTulos;
     }
@@ -65,7 +65,7 @@ public class Parseri {
         bibTexTulos = bibTexTulos.concat("volume = {" + volume + "}, \n");
         bibTexTulos = bibTexTulos.concat("pages = {" + pages + "}, \n");
         bibTexTulos = bibTexTulos.concat("address = {" + address + "}, \n");
-        bibTexTulos = bibTexTulos.concat("julkaisija = {" + publisher + "}, \n");
+        bibTexTulos = bibTexTulos.concat("publisher = {" + publisher + "}, \n");
         bibTexTulos = bibTexTulos.concat("} \n");
         //to do
         return bibTexTulos;
@@ -80,7 +80,7 @@ public class Parseri {
         bibTexTulos = bibTexTulos.concat("title = {" + title + "}, \n");
         bibTexTulos = bibTexTulos.concat("booktitle = {" + booktitle + "}, \n");
         bibTexTulos = bibTexTulos.concat("year = {" + year + "}, \n");
-        bibTexTulos = bibTexTulos.concat("julkaisija = {" + publisher + "}, \n");
+        bibTexTulos = bibTexTulos.concat("publisher = {" + publisher + "}, \n");
         bibTexTulos = bibTexTulos.concat("} \n");
         //to do
         return bibTexTulos;

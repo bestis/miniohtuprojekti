@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ViitekaluServlet extends HttpServlet {
 
-    private String VIITEFILE="/home/jmtollik/viitteet.xml";
+    private String VIITEFILE = "/home/jmtollik/viitteet.xml";
     // Kirjat
     List<HashMap> viitteet = new ArrayList();
 //  int lisattyjaViitteita = -1;
@@ -235,16 +235,19 @@ public class ViitekaluServlet extends HttpServlet {
     private void listBibtexReadable(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
         header(request, response, out);
 
-        out.println("<br />L&auml;hdelistaus<br /><br />");
+        out.println("<h2><br />L&auml;hdelistaus</h2>");
         Iterator<HashMap> it = viitteet.iterator();
         int i = 1;
         while (it.hasNext()) {
             HashMap kirja = it.next();
-            out.println("L&auml;hde " + i + ":<br />");
+            out.println("<h3>L&auml;hde " + i + ":</h3>");
             Iterator hit = kirja.entrySet().iterator();
             while (hit.hasNext()) {
                 Map.Entry pairs = (Map.Entry) hit.next();
-                out.println(pairs.getKey() + ": " + pairs.getValue() + "<br />");
+                if (pairs.getKey().equals("id")) {
+                    continue;
+                }
+                out.println("<b>" + pairs.getKey() + "</b>: " + pairs.getValue() + "<br />");
             }
             out.println("<br />");
             //Do something with obj
@@ -257,11 +260,11 @@ public class ViitekaluServlet extends HttpServlet {
 
     private void listBibtex(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
         header(request, response, out);
-        out.println("<br />BibTeX:<br /><br />");
+        out.println("<br />BibTeX:<br />");
         Parseri parseri = new Parseri(viitteet);
-        out.println("<pre>");
+        out.println("<textarea name=\"bibtex\" cols=\"50\" rows=\"30\">");
         out.println(parseri.getBibTex());
-        out.println("</pre>");
+        out.println("</textarea>");
         out.close();
     }
 
