@@ -41,8 +41,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ViitekaluServlet extends HttpServlet {
 
-    private String VIITEFILE = "C:/Users/nakke/personal_domain/config/viitteet.xml";
-//    private String VIITEFILE="/home/jmtollik/viitteet.xml";
+    private String VIITEFILE="/home/jmtollik/viitteet.xml";
     // Kirjat
     List<HashMap> viitteet = new ArrayList();
 //  int lisattyjaViitteita = -1;
