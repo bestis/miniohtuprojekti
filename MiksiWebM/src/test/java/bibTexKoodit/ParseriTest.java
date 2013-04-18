@@ -59,7 +59,7 @@ public class ParseriTest {
         odotettuTulos = odotettuTulos.concat("author = {" + author + "}, \n");
         odotettuTulos = odotettuTulos.concat("title = {" + title + "}, \n");
         odotettuTulos = odotettuTulos.concat("year = {" + year + "}, \n");
-        odotettuTulos = odotettuTulos.concat("julkaisija = {" + publisher + "}, \n");
+        odotettuTulos = odotettuTulos.concat("publisher = {" + publisher + "}, \n");
         odotettuTulos = odotettuTulos.concat("} \n");
 
         
