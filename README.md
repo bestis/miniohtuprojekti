@@ -15,8 +15,6 @@ Lähteet sivuille Bibtex muotoon
 
 Pysyvyys
 
-Article & inproc lisääminen
-
 Luettavan tekstin generointi
 
 Viitteen poistaminen
@@ -41,10 +39,20 @@ Viitteen lisääminen (kirja)
 
 BibTex-tiedoston generointi
 
+Article & inprocin lisääminen
+
+Lähteet sivuille Bibtex muotoon
+
+Pysyvyys
+
+Luettavan tekstin generointi
+
+Mielusti verkossa toimiva
+
 Backlog:
 ---------
 https://docs.google.com/spreadsheet/ccc?key=0AvPFo7FVa9TZdFBrWHlUMUZwTW85bDZlS1dINjQ3N1E&usp=sharing
 
 Jenkins:
 ---------
-xxx
+http://t-jmtollik.users.cs.helsinki.fi/jenkins/job/MiksiWebM/
