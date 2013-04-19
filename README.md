@@ -15,6 +15,10 @@ Lähteet sivuille Bibtex muotoon
 
 Pysyvyys
 
+BibTex-tiedoston fiilaaminen (sisennys /koodimainen)
+
+Listaus "oneliner" & klikakkaus tuo kaikki tiedot
+
 Luettavan tekstin generointi
 
 Viitteen poistaminen
