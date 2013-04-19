@@ -9,7 +9,7 @@ package bibTexKoodit;
  * @author Ronnie
  */
 
-// Osaankon?
+// Osaanko?
 import java.util.*;
 
 public class Parseri {
