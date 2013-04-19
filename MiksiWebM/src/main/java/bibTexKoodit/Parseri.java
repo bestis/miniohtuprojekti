@@ -8,6 +8,8 @@ package bibTexKoodit;
  *
  * @author Ronnie
  */
+
+// Osaankon?
 import java.util.*;
 
 public class Parseri {
