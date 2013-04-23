@@ -291,15 +291,43 @@ public class ViitekaluServlet extends HttpServlet {
 
         // Lis&auml;yslomake
 
-        out.println("<script type=\"text/javascript\">function naytaKirja(id){ document.getElementById(id).style.display='block';"
+        out.println("<script type=\"text/javascript\">"
+                + "function naytaKirja(id){ document.getElementById(id).style.display='block';"
                 + "document.getElementById('artikkeli').style.display='none';"
-                + "document.getElementById('inproceedings').style.display='none';}</script>");
-        out.println("<script type=\"text/javascript\">function naytaArtikkeli(id){ document.getElementById(id).style.display='block';"
+                + "document.getElementById('inproceedings').style.display='none';}"
+                + "</script>");
+        
+        out.println("<script type=\"text/javascript\">"
+                + "function naytaArtikkeli(id){ document.getElementById(id).style.display='block';"
                 + "document.getElementById('kirja').style.display='none';"
-                + "document.getElementById('inproceedings').style.display='none';}</script>");
-        out.println("<script type=\"text/javascript\">function naytaInproceedings(id) {document.getElementById(id).style.display='block';"
+                + "document.getElementById('inproceedings').style.display='none';}"
+                + "</script>");
+        
+        out.println("<script type=\"text/javascript\">"
+                + "function naytaInproceedings(id) {document.getElementById(id).style.display='block';"
                 + "document.getElementById('artikkeli').style.display='none';"
-                + "document.getElementById('kirja').style.display='none';}</script>");
+                + "document.getElementById('kirja').style.display='none';}"
+                + "</script>");
+        
+        out.println("<script type=\"text/javascript\">function validateForm(formName)"
+                + "{for(var i=0; i<document.forms[formName].elements.length; i++){ "
+                + "var x=document.forms[formName].elements[i].value;"
+                + "if (x==null || x==\"\")"
+                + "   {alert(\"Tyhjiä kenttiä!\");"
+                + "   return false;}}"
+                + "var y= document.forms[formName][\"year\"].value;"
+                + "if(isNaN(y)||y.length != 4)"
+                + "   {alert(\"Anna oikea vuosi!\");"
+                + "   return false;}"
+                +"if(formName ===\"artikkelilomake\"){"
+                + "y=document.forms[formName][\"number\"].value;"
+                + "if(isNaN(y)){alert(\"Anna oikea numero!\");"
+                + "return false;}"
+                + "y=document.forms[formName][\"volume\"].value;"
+                + "if(isNaN(y)){alert(\"Anna oikea volume!\");"
+                + "return false;}}"
+                + "}</script>");
+        
 
         out.println("Book:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaKirja('kirja');\"> ");
         out.println("Article:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaArtikkeli('artikkeli');\" > ");
@@ -307,7 +335,7 @@ public class ViitekaluServlet extends HttpServlet {
 
 
         out.println("<div class=\"kirjalomake\" id=\"kirja\" style=\"display:none\">"
-                + "<br /><br /><form method=\"post\" action=\"?action=add\">"
+                + "<br /><br /><form name=\"kirjalomake\" method=\"post\" action=\"?action=add\" onsubmit=\"return validateForm(name)\">"
                 + "<input type=\"hidden\" name=\"type\" value=\"book\" />"
                 + "Julkaisija:<br /><input type=\"text\" name=\"publisher\" /><br />"
                 + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
@@ -317,7 +345,7 @@ public class ViitekaluServlet extends HttpServlet {
                 + "</form><br /><br /></div>");
 
         out.println("<div class=\"artikkelilomake\" id=\"artikkeli\" style=\"display:none\">"
-                + "<br /><br /><form method=\"post\" action=\"?action=add\">"
+                + "<br /><br /><form name=\"artikkelilomake\" method=\"post\" action=\"?action=add\"onsubmit=\"return validateForm(name)\">"
                 + "<input type=\"hidden\" name=\"type\" value=\"article\" />"
                 + "Journal:<br /><input type=\"text\" name=\"journal\" /><br />"
                 + "Volume:<br /><input type=\"text\" name=\"volume\" /><br />"
@@ -333,7 +361,7 @@ public class ViitekaluServlet extends HttpServlet {
                 + "</form><br /><br /></div>");
 
         out.println("<div class=\"inproceedingslomake\" id=\"inproceedings\" style=\"display:none\">"
-                + "<br /><br /><form method=\"post\" action=\"?action=add\">"
+                + "<br /><br /><form name=\"inproceedingslomake\" method=\"post\" action=\"?action=add\"onsubmit=\"return validateForm(name)\">"
                 + "<input type=\"hidden\" name=\"type\" value=\"inproceedings\" />"
                 + "Kirjoittaja:<br /><input type=\"text\" name=\"author\" /><br />"
                 + "Nimike:<br /><input type=\"text\" name=\"title\" /><br />"
