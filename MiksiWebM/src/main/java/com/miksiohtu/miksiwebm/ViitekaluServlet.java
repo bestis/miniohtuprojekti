@@ -5,8 +5,8 @@
 package com.miksiohtu.miksiwebm;
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * To change this template, choose Tools | Templates and open the template in
+ * the editor.
  */
 import bibTexKoodit.Parseri;
 import java.beans.XMLDecoder;
@@ -296,19 +296,19 @@ public class ViitekaluServlet extends HttpServlet {
                 + "document.getElementById('artikkeli').style.display='none';"
                 + "document.getElementById('inproceedings').style.display='none';}"
                 + "</script>");
-        
+
         out.println("<script type=\"text/javascript\">"
                 + "function naytaArtikkeli(id){ document.getElementById(id).style.display='block';"
                 + "document.getElementById('kirja').style.display='none';"
                 + "document.getElementById('inproceedings').style.display='none';}"
                 + "</script>");
-        
+
         out.println("<script type=\"text/javascript\">"
                 + "function naytaInproceedings(id) {document.getElementById(id).style.display='block';"
                 + "document.getElementById('artikkeli').style.display='none';"
                 + "document.getElementById('kirja').style.display='none';}"
                 + "</script>");
-        
+
         out.println("<script type=\"text/javascript\">function validateForm(formName)"
                 + "{for(var i=0; i<document.forms[formName].elements.length; i++){ "
                 + "var x=document.forms[formName].elements[i].value;"
@@ -319,15 +319,22 @@ public class ViitekaluServlet extends HttpServlet {
                 + "if(isNaN(y)||y.length != 4)"
                 + "   {alert(\"Anna oikea vuosi!\");"
                 + "   return false;}"
-                +"if(formName ===\"artikkelilomake\"){"
+                + "if(formName ===\"artikkelilomake\"){"
                 + "y=document.forms[formName][\"number\"].value;"
                 + "if(isNaN(y)){alert(\"Anna oikea numero!\");"
                 + "return false;}"
                 + "y=document.forms[formName][\"volume\"].value;"
                 + "if(isNaN(y)){alert(\"Anna oikea volume!\");"
-                + "return false;}}"
-                + "}</script>");
-        
+                + "return false;}"
+                + "y=document.forms[formName][\"pages\"].value;"
+                + "var k=y.charAt(0); if(isNaN){alert(\"Anna oikeat sivut!\");return false;}  "
+                + "var sivuvaliNahty=false;"
+                + "for(var j=1;j<y.length;j++){"
+                + "k=y.charAt(j); if(sivuvaliNahty==false){if(isNaN(k)){if(k===\"-\"){if(k=y.charAt(j+1)===\"-\"){sivuvaliNahty=true;j++;}else{alert(\"Anna oikeat sivut!\");return false;}} else{alert(\"Anna oikeat sivut!\");return false;}  "
+                + "}}else{if(isNan(k)){alert(\"Anna oikeat sivut!\");return false;}"
+                + "}}"
+                + "}}</script>");
+
 
         out.println("Book:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaKirja('kirja');\"> ");
         out.println("Article:<input type=\"radio\" name=\"tyyppi\" onClick=\"naytaArtikkeli('artikkeli');\" > ");
