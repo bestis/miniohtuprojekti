@@ -235,7 +235,8 @@ public class ViitekaluServlet extends HttpServlet {
     private void listBibtexReadable(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
         header(request, response, out);
         out.println("<script type=\"text/javascript\">"
-                + "function naytaLahde(id){ document.getElementById(id).style.display='block';}"
+                + "function naytaLahde(id){ if(document.getElementById(id).style.display=='block'){"
+                + "document.getElementById(id).style.display='none'}else{document.getElementById(id).style.display='block'}}"
                 + "</script>");
 
         out.println("<<h2><br />L&auml;hdelistaus</h2>");
