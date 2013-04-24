@@ -234,21 +234,28 @@ public class ViitekaluServlet extends HttpServlet {
 
     private void listBibtexReadable(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
         header(request, response, out);
+        out.println("<script type=\"text/javascript\">"
+                + "function naytaLahde(id){ document.getElementById(id).style.display='block';}"
+                + "</script>");
 
-        out.println("<h2><br />L&auml;hdelistaus</h2>");
+        out.println("<<h2><br />L&auml;hdelistaus</h2>");
         Iterator<HashMap> it = viitteet.iterator();
         int i = 1;
         while (it.hasNext()) {
             HashMap kirja = it.next();
-            out.println("<h3>L&auml;hde " + i + ":</h3>");
+            out.println("<a href=\"#\" onClick=\"naytaLahde('" + i + "')\"><h3>L&auml;hde " + i + ":</h3></a>");
+            out.println("<div class=\"lahde\" id=" + i + " style=\"display:none\">");
             Iterator hit = kirja.entrySet().iterator();
             while (hit.hasNext()) {
                 Map.Entry pairs = (Map.Entry) hit.next();
                 if (pairs.getKey().equals("id")) {
                     continue;
                 }
+                
                 out.println("<b>" + pairs.getKey() + "</b>: " + pairs.getValue() + "<br />");
+                
             }
+            out.println("</div>");
             out.println("<br />");
             //Do something with obj
             i++;
@@ -290,6 +297,7 @@ public class ViitekaluServlet extends HttpServlet {
         }
 
         // Lis&auml;yslomake
+
 
         out.println("<script type=\"text/javascript\">"
                 + "function naytaKirja(id){ document.getElementById(id).style.display='block';"
