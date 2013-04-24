@@ -18,11 +18,17 @@ public class Parseri {
     static String IdCharit = "ABCDEFGHIJKLMNOPQRST0123456789";
     static Random rng = new Random();
     static List<HashMap> viitteet;
+    HashMap<String,String> viite;
+    
 //    int lisattyjaViitteita;
 
     public Parseri(List<HashMap> kirjat) {
         this.viitteet = kirjat;
 //        this.lisattyjaViitteita = lisattyjaViitteita;
+    }
+    public Parseri(HashMap lahde){
+       this.viite=lahde;
+
     }
 
     public Parseri() {
@@ -88,6 +94,7 @@ public class Parseri {
 
     public String getBibTex() {
         bibTexTulos = "";
+        
         HashMap<String, String> viite;
         
         for (int i = 0; i < viitteet.size(); i++) {
@@ -128,6 +135,48 @@ public class Parseri {
         }
 //        lisattyjaViitteita++;
         return bibTexTulos;
+    }
+    public String getLahdeBibTex(){
+        
+                bibTexTulos = "";
+        
+        
+       
+        if (viite.get("type").equals("book")) {
+                String id = viite.get("id");
+                String author = viite.get("author");
+                String title = viite.get("title");
+                String year = viite.get("year");
+                String publisher = viite.get("publisher");
+                muutaBibTexMuotoonKirja("book", id, author, title, year, publisher);
+
+            } else if (viite.get("type").equals("article")) {
+                String id = viite.get("id");
+                String author = viite.get("author");
+                String title = viite.get("title");
+                String year = viite.get("year");
+                String month = viite.get("month");
+                String journal = viite.get("journal");
+                String volume = viite.get("volume");
+                String pages = viite.get("pages");
+                String address = viite.get("address");
+                String publisher = viite.get("publisher");
+                muutaBibTexMuotoonArtikkeli("aricle", id, author, title, year, month, journal, volume, pages, address, publisher);
+
+
+            } else if (viite.get("type").equals("inproceedings")) {
+                String id = viite.get("id");
+                String author = viite.get("author");
+                String title = viite.get("title");
+                String booktitle = viite.get("booktitle");
+                String year = viite.get("year");
+                String publisher = viite.get("publisher");
+                muutaBibTexMuotoonInproceedings("inproceedings", id, author, title,
+                        booktitle, year, publisher);
+            }
+         return bibTexTulos;
+        
+        
     }
 
     public static String generoiId(Random rng, String characters, int length) {

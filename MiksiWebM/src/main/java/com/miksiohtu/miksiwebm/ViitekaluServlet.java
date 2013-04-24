@@ -251,18 +251,23 @@ public class ViitekaluServlet extends HttpServlet {
                 if (pairs.getKey().equals("id")) {
                     continue;
                 }
-                
+
                 out.println("<b>" + pairs.getKey() + "</b>: " + pairs.getValue() + "<br />");
-                
+
             }
+            Parseri parseri = new Parseri(viitteet.get(i-1));
+            out.print("<textarea name=\"bibtex\" cols=\"40\" rows=\"7\">");
+            out.println(parseri.getLahdeBibTex());
+            out.println("</textarea>");
             out.println("</div>");
             out.println("<br />");
             //Do something with obj
             i++;
         }
         out.println("<br /><br />");
+        
 
-        footer(out, cntxt);
+
     }
 
     private void listBibtex(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
