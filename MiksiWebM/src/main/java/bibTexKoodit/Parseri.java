@@ -88,7 +88,6 @@ public class Parseri {
         bibTexTulos = bibTexTulos.concat("  year = {" + year + "}, \n");
         bibTexTulos = bibTexTulos.concat("  publisher = {" + publisher + "}, \n");
         bibTexTulos = bibTexTulos.concat("} \n");
-        //to do
         return bibTexTulos;
     }
 
