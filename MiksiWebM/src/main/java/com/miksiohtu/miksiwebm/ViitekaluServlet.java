@@ -236,39 +236,55 @@ public class ViitekaluServlet extends HttpServlet {
         header(request, response, out);
         out.println("<script type=\"text/javascript\">"
                 + "function naytaLahde(id){ if(document.getElementById(id).style.display=='block'){"
-                + "document.getElementById(id).style.display='none'}else{document.getElementById(id).style.display='block'}}"
+                + "document.getElementById(id).style.display='none';document.getElementById('s'+id).style.display='inline'"
+		+ "}else{document.getElementById(id).style.display='block';document.getElementById('s'+id).style.display='none'}}"
                 + "</script>");
 
-        out.println("<<h2><br />L&auml;hdelistaus</h2>");
+        out.println("<br /><h2>L&auml;hdelistaus</h2>");
         Iterator<HashMap> it = viitteet.iterator();
         int i = 1;
         while (it.hasNext()) {
             HashMap kirja = it.next();
-            out.println("<a href=\"#\" onClick=\"naytaLahde('" + i + "')\"><h3>L&auml;hde " + i + ":</h3></a>");
-            out.println("<div class=\"lahde\" id=" + i + " style=\"display:none\">");
+            out.println("<a href=\"#\" onClick=\"naytaLahde('" + i + "')\"><strong>L&auml;hde " + i + ":</strong></a>");
             Iterator hit = kirja.entrySet().iterator();
-            while (hit.hasNext()) {
+	    String shortInfo="";
+	    String longInfo="";
+            while (hit.hasNext())
+	    {
                 Map.Entry pairs = (Map.Entry) hit.next();
-                if (pairs.getKey().equals("id")) {
+                if (pairs.getKey().equals("id"))
+		{
                     continue;
                 }
-
-                out.println("<b>" + pairs.getKey() + "</b>: " + pairs.getValue() + "<br />");
-
+		// Shortinfo
+		if (pairs.getKey().equals("author") || pairs.getKey().equals("title") || pairs.getKey().equals("year"))
+		{
+		    if (!shortInfo.isEmpty())
+		    {
+			shortInfo += ", ";
+		    }
+		    shortInfo += pairs.getKey()+": "+pairs.getValue();
+		}
+		// Longinfo
+		longInfo += "<b>" + pairs.getKey() + "</b>: " + pairs.getValue() + "<br />";
             }
             Parseri parseri = new Parseri(viitteet.get(i-1));
-            out.print("<textarea name=\"bibtex\" cols=\"40\" rows=\"7\">");
-            out.println(parseri.getLahdeBibTex());
-            out.println("</textarea>");
+            longInfo += "<textarea name=\"bibtex\" cols=\"40\" rows=\"7\">";
+            longInfo += parseri.getLahdeBibTex();
+            longInfo += "</textarea>";
+
+	    // Print Infos
+	    out.println("<div class=\"lahdeshort\" id=\"s" + i + "\" style=\"display: inline;\">");
+	    out.println(shortInfo);
+	    out.println("</div>");
+            out.println("<div class=\"lahde\" id=" + i + " style=\"display:none\">");
+	    out.println(longInfo);
             out.println("</div>");
             out.println("<br />");
             //Do something with obj
             i++;
         }
-        out.println("<br /><br />");
-        
-
-
+        out.println("<br />");
     }
 
     private void listBibtex(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
