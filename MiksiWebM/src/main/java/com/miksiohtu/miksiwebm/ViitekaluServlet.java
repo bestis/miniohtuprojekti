@@ -246,24 +246,35 @@ public class ViitekaluServlet extends HttpServlet {
         while (it.hasNext()) {
             HashMap kirja = it.next();
             out.println("<a href=\"#\" onClick=\"naytaLahde('" + i + "')\"><strong>L&auml;hde " + i + ":</strong></a>");
+	    
+	    // Jos ei id:tä generoi se
+	    if (kirja.get("id") == null)
+	    {
+		kirja.put("id", generoiId(rng, IdCharit, 5));
+	    }
+
+	    // Arvos
             Iterator hit = kirja.entrySet().iterator();
 	    String shortInfo="";
 	    String longInfo="";
             while (hit.hasNext())
 	    {
                 Map.Entry pairs = (Map.Entry) hit.next();
-                if (pairs.getKey().equals("id"))
+                /*if (pairs.getKey().equals("id"))
 		{
                     continue;
-                }
+                }*/
 		// Shortinfo
-		if (pairs.getKey().equals("author") || pairs.getKey().equals("title") || pairs.getKey().equals("year"))
+		if (pairs.getKey().equals("id") || pairs.getKey().equals("type") || pairs.getKey().equals("author") || pairs.getKey().equals("title") || pairs.getKey().equals("year"))
 		{
 		    if (!shortInfo.isEmpty())
 		    {
 			shortInfo += ", ";
 		    }
-		    shortInfo += pairs.getKey()+": "+pairs.getValue();
+		    if (pairs.getValue() != null)
+		    {
+			shortInfo += pairs.getKey()+": "+pairs.getValue();
+		    }
 		}
 		// Longinfo
 		longInfo += "<b>" + pairs.getKey() + "</b>: " + pairs.getValue() + "<br />";
