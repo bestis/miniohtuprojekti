@@ -103,6 +103,11 @@
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <stopKey>foo</stopKey>
                     <stopPort>9999</stopPort>
+		    <webAppConfig>
+			<contextPath>/MiksiWebM</contextPath>
+			<tempDirectory>${project.build.directory}/work</tempDirectory>
+			<defaultsDescriptor>src/main/webapp/WEB-INF/web.xml</defaultsDescriptor>
+		    </webAppConfig>
                 </configuration>
 	        <executions>
 	            <execution>
