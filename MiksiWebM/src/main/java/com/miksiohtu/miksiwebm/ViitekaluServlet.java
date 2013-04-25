@@ -223,7 +223,7 @@ public class ViitekaluServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void exportBibTex(HttpServletResponse response, PrintWriter out) {
+    protected void exportBibTex(HttpServletResponse response, PrintWriter out) {
         System.out.println(viitteet.size());
         Parseri parseri = new Parseri(viitteet);
         response.setContentType("application/x-bibtex;charset=UTF-8");
@@ -232,7 +232,7 @@ public class ViitekaluServlet extends HttpServlet {
         out.close();
     }
 
-    private void listBibtexReadable(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
+    protected void listBibtexReadable(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
         header(request, response, out);
         out.println("<script type=\"text/javascript\">"
                 + "function naytaLahde(id){ if(document.getElementById(id).style.display=='block'){"
@@ -298,7 +298,7 @@ public class ViitekaluServlet extends HttpServlet {
         out.println("<br />");
     }
 
-    private void listBibtex(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
+    protected void listBibtex(HttpServletRequest request, HttpServletResponse response, PrintWriter out, ServletContext cntxt) {
         header(request, response, out);
         out.println("<br />BibTeX:<br />");
         Parseri parseri = new Parseri(viitteet);
@@ -308,7 +308,7 @@ public class ViitekaluServlet extends HttpServlet {
         out.close();
     }
 
-    private void addBibTex(HttpServletRequest request, HttpServletResponse response, PrintWriter out, boolean isPost, ServletContext cntxt) {
+    protected void addBibTex(HttpServletRequest request, HttpServletResponse response, PrintWriter out, boolean isPost, ServletContext cntxt) {
         header(request, response, out);
 
         // Post?
