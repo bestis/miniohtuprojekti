@@ -53,6 +53,10 @@ Luettavan tekstin generointi
 
 Mielusti verkossa toimiva
 
+BibTex-tiedoston fiilaaminen (sisennys /koodimainen)
+
+Listaus "oneliner" & klikakkaus tuo kaikki tiedot
+
 Backlog:
 ---------
 https://docs.google.com/spreadsheet/ccc?key=0AvPFo7FVa9TZdFBrWHlUMUZwTW85bDZlS1dINjQ3N1E&usp=sharing
@@ -60,3 +64,9 @@ https://docs.google.com/spreadsheet/ccc?key=0AvPFo7FVa9TZdFBrWHlUMUZwTW85bDZlS1d
 Jenkins:
 ---------
 http://t-jmtollik.users.cs.helsinki.fi/jenkins/job/MiksiWebM/
+
+Raportti:
+----------
+https://docs.google.com/document/d/1a1DTW8M_yLC3nwMOSDc1TaKscYj6Ro9t_WSNllb8KX4/edit?usp=sharing
+
+
